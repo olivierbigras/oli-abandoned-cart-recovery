@@ -289,9 +289,13 @@ class OLI_ACR_Lang {
 			$locale,
 			static function () use ( $adapter, $locale, $callback, $args ) {
 				$previous = $adapter->switch_language( $locale );
+				// Pendant l'envoi, tout home_url() (en-tête WooCommerce, boutons, liens des gabarits) garde le schéma de l'option « home ».
+				$scheme_filter = array( __CLASS__, 'keep_home_scheme' );
+				add_filter( 'home_url', $scheme_filter, PHP_INT_MAX );
 				try {
 					return call_user_func_array( $callback, $args );
 				} finally {
+					remove_filter( 'home_url', $scheme_filter, PHP_INT_MAX );
 					$adapter->restore_language( $previous );
 				}
 			}
