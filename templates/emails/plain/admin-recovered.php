@@ -22,6 +22,8 @@ if ( 'order' === $recovery_type ) {
 	printf( esc_html__( 'Good news! An abandoned cart was recovered and became order #%s.', 'oli-abandoned-cart-recovery' ), esc_html( $order->get_order_number() ) );
 }
 echo "\n\n";
-do_action( 'woocommerce_email_order_details', $order, true, true, $email ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Crochet de WooCommerce.
+if ( $order instanceof WC_Order && $order->get_id() > 0 ) { // Commande enregistrée seulement (voir le gabarit HTML).
+	do_action( 'woocommerce_email_order_details', $order, true, true, $email ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Crochet de WooCommerce.
+}
 echo "\n";
 echo esc_html( wp_strip_all_tags( wptexturize( $email->get_additional_content() ) ) );

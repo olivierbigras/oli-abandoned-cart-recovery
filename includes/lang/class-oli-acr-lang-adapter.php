@@ -132,6 +132,18 @@ abstract class OLI_ACR_Lang_Adapter {
 	}
 
 	/**
+	 * Traduction d'un texte libre (ex. nom de produit) vers une locale. Par défaut : inchangé.
+	 *
+	 * @param string $text   Texte.
+	 * @param string $locale Locale voulue.
+	 * @return string
+	 */
+	public function translate_text( $text, $locale ) {
+		unset( $locale );
+		return $text;
+	}
+
+	/**
 	 * Code court (fr, en) d'une locale, utilisé par plusieurs extensions.
 	 *
 	 * @param string $locale Locale.

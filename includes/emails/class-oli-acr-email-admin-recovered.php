@@ -82,6 +82,20 @@ class OLI_ACR_Email_Admin_Recovered extends WC_Email {
 	 * @return void
 	 */
 	public function trigger( $order, $type = 'cart' ) {
+		// Locale WordPress ET langue de l'extension multilingue alignées sur la langue du site : sinon les libellés
+		// WooCommerce (ex. « Résumé de la commande ») peuvent sortir dans une autre langue que ceux de l'avis.
+		$locale = OLI_ACR_Lang::resolve( (string) OLI_ACR_Lang::adapter()->default_language() );
+		OLI_ACR_Lang::run_in( $locale, array( $this, 'trigger_now' ), $order, $type );
+	}
+
+	/**
+	 * Déclenchement dans la langue courante.
+	 *
+	 * @param WC_Order $order Commande.
+	 * @param string   $type  cart ou order.
+	 * @return void
+	 */
+	public function trigger_now( $order, $type = 'cart' ) {
 		$this->setup_locale();
 		if ( $order instanceof WC_Order ) {
 			$this->object                         = $order;

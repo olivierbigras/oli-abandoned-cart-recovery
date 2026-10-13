@@ -28,6 +28,9 @@ if ( 'order' === $recovery_type ) {
 </p>
 
 <?php
-do_action( 'woocommerce_email_order_details', $order, true, false, $email ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Crochet de WooCommerce.
-do_action( 'woocommerce_email_customer_details', $order, true, false, $email ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Crochet de WooCommerce.
+// Détails seulement pour une commande enregistrée : des extensions (ex. Purolator) plantent sur une commande d'ID 0 (aperçu, test).
+if ( $order instanceof WC_Order && $order->get_id() > 0 ) {
+	do_action( 'woocommerce_email_order_details', $order, true, false, $email ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Crochet de WooCommerce.
+	do_action( 'woocommerce_email_customer_details', $order, true, false, $email ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Crochet de WooCommerce.
+}
 do_action( 'woocommerce_email_footer', $email ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Crochet de WooCommerce.
