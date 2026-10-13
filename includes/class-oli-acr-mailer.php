@@ -382,7 +382,7 @@ class OLI_ACR_Mailer {
 			'{full_name}'     => trim( $context['first_name'] . ' ' . $context['last_name'] ),
 			'{email}'         => $context['email'],
 			'{site_name}'     => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
-			'{site_url}'      => home_url( '/' ),
+			'{site_url}'      => OLI_ACR_Lang::keep_home_scheme( home_url( '/' ) ),
 			'{order_number}'  => $context['order_number'],
 			'{order_date}'    => $context['order_date'],
 			'{coupon_code}'   => $context['coupon'],
