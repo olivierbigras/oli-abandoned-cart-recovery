@@ -382,7 +382,7 @@ class OLI_ACR_Mailer {
 			'{full_name}'     => trim( $context['first_name'] . ' ' . $context['last_name'] ),
 			'{email}'         => $context['email'],
 			'{site_name}'     => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
-			'{site_url}'      => home_url( '/' ),
+			'{site_url}'      => OLI_ACR_Lang::keep_home_scheme( home_url( '/' ) ),
 			'{order_number}'  => $context['order_number'],
 			'{order_date}'    => $context['order_date'],
 			'{coupon_code}'   => $context['coupon'],
@@ -620,6 +620,14 @@ class OLI_ACR_Mailer {
 			$product_id = ! empty( $item['variation_id'] ) ? $item['variation_id'] : $item['product_id'];
 			$product    = wc_get_product( $product_id );
 			$name       = $product ? $product->get_name() : ( isset( $item['name'] ) ? $item['name'] : '' );
+			/**
+			 * Filtre le nom d'un produit dans le tableau du courriel (langue de la relance).
+			 *
+			 * @param string          $name    Nom (traduit par l'extension multilingue si elle le permet).
+			 * @param WC_Product|null $product Produit.
+			 * @param string          $locale  Langue de l'envoi.
+			 */
+			$name = (string) apply_filters( 'oli_acr_item_name', OLI_ACR_Lang::adapter()->translate_text( $name, determine_locale() ), $product, determine_locale() );
 			$image      = '';
 			if ( $product && $product->get_image_id() ) {
 				$src = wp_get_attachment_image_url( (int) $product->get_image_id(), 'woocommerce_gallery_thumbnail' );

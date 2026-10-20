@@ -232,10 +232,7 @@ class OLI_ACR_Lang {
 		$translated = self::adapter()->translate_url( $url, $locale );
 		// Certaines extensions (ex. TranslatePress) recalculent l'URL avec is_ssl() : en WP-CLI ou en cron serveur,
 		// le lien sortait en http://. On garde le schéma de l'URL d'origine quand l'hôte est le même.
-		$scheme = wp_parse_url( $url, PHP_URL_SCHEME );
-		if ( $scheme && wp_parse_url( $translated, PHP_URL_HOST ) === wp_parse_url( $url, PHP_URL_HOST ) ) {
-			$translated = set_url_scheme( $translated, $scheme );
-		}
+		$translated = self::keep_home_scheme( $translated );
 		/**
 		 * Filtre une URL convertie vers une langue (liens des courriels, redirections).
 		 *
@@ -255,7 +252,24 @@ class OLI_ACR_Lang {
 	public static function checkout_url( $locale ) {
 		$page_id = function_exists( 'wc_get_page_id' ) ? (int) wc_get_page_id( 'checkout' ) : 0;
 		$url     = $page_id > 0 ? self::adapter()->page_url( $page_id, $locale ) : self::url( wc_get_checkout_url(), $locale );
-		return (string) apply_filters( 'oli_acr_translate_url', $url, wc_get_checkout_url(), $locale );
+		return (string) apply_filters( 'oli_acr_translate_url', self::keep_home_scheme( $url ), wc_get_checkout_url(), $locale );
+	}
+
+	/**
+	 * Impose le schéma de l'option « home » à une URL du site.
+	 * Pendant run_in(), TranslatePress filtre home_url() et le recalcule avec is_ssl() : en WP-CLI ou en cron
+	 * serveur, home_url() lui-même sort en http://. On se fie donc à l'option enregistrée, pas à home_url().
+	 *
+	 * @param string $url URL.
+	 * @return string
+	 */
+	public static function keep_home_scheme( $url ) {
+		$home   = (string) get_option( 'home' );
+		$scheme = wp_parse_url( $home, PHP_URL_SCHEME );
+		if ( $scheme && wp_parse_url( $url, PHP_URL_HOST ) === wp_parse_url( $home, PHP_URL_HOST ) ) {
+			$url = set_url_scheme( $url, $scheme );
+		}
+		return $url;
 	}
 
 	/**
@@ -275,9 +289,13 @@ class OLI_ACR_Lang {
 			$locale,
 			static function () use ( $adapter, $locale, $callback, $args ) {
 				$previous = $adapter->switch_language( $locale );
+				// Pendant l'envoi, tout home_url() (en-tête WooCommerce, boutons, liens des gabarits) garde le schéma de l'option « home ».
+				$scheme_filter = array( __CLASS__, 'keep_home_scheme' );
+				add_filter( 'home_url', $scheme_filter, PHP_INT_MAX );
 				try {
 					return call_user_func_array( $callback, $args );
 				} finally {
+					remove_filter( 'home_url', $scheme_filter, PHP_INT_MAX );
 					$adapter->restore_language( $previous );
 				}
 			}

@@ -5,7 +5,7 @@ Tags: abandoned cart, woocommerce, cart recovery, pending orders, multilingual
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.3
+Stable tag: 1.1.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,6 +180,15 @@ The plugin stores, in the store's own database: the email, phone, first and last
 
 == Changelog ==
 
+= 1.1.5 =
+* Maintenance: GitHub links updated to github.com/olivierbigras (account renamed from bigrat95). No functional change.
+
+= 1.1.4 =
+* Fix: links in reminder emails (recovery, unsubscribe, store logo in the WooCommerce header, buttons) always keep https when TranslatePress rebuilds home_url() during WP-CLI or server cron runs
+* Fix: product names in the cart table are shown in the reminder language (TranslatePress), filterable with `oli_acr_item_name`
+* Fix: the admin "recovered sale" notice is rendered entirely in the site language (WordPress locale and multilingual plugin aligned)
+* Fix: order details are only added to the admin notice for a saved order, so third-party email hooks (e.g. shipping plugins) cannot crash on a preview order
+
 = 1.1.3 =
 * NEW: Settings and Donate links on the Plugins screen, optional support notice on plugin screens, footer donation link, and Donate link on the WordPress.org plugin page (PayPal)
 
@@ -249,6 +258,12 @@ The plugin stores, in the store's own database: the email, phone, first and last
 * French (Canada) and French (France) translations
 
 == Upgrade Notice ==
+
+= 1.1.5 =
+Maintenance release: GitHub links updated. No functional change.
+
+= 1.1.4 =
+https links in every reminder email (multilingual + WP-CLI/cron), product names in the reminder language, admin notice in the site language.
 
 = 1.1.3 =
 Adds Donate / support links (Plugins screen, plugin notice, WordPress.org Donate link).

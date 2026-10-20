@@ -15,7 +15,7 @@ TX = {
 
 T = {
 "Oli Abandoned Cart Recovery": "Oli Abandoned Cart Recovery",
-"https://github.com/bigrat95/oli-abandoned-cart-recovery": "https://github.com/bigrat95/oli-abandoned-cart-recovery",
+"https://github.com/olivierbigras/oli-abandoned-cart-recovery": "https://github.com/olivierbigras/oli-abandoned-cart-recovery",
 "Lightweight abandoned cart and pending order recovery for WooCommerce. Captures the checkout email as soon as it is typed (classic and block checkout), sends a sequence of reminder emails with unique coupons, and tracks recovered sales.": "Récupération légère des paniers abandonnés et des commandes en attente pour WooCommerce. Capture le courriel dès qu'il est tapé au paiement (checkout classique et en blocs), envoie une séquence de relances avec des coupons uniques et suit les ventes récupérées.",
 "Olivier Bigras": "Olivier Bigras",
 "https://olivierbigras.com": "https://olivierbigras.com",

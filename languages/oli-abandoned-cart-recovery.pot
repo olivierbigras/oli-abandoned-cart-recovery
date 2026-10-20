@@ -22,7 +22,7 @@ msgstr ""
 
 #. Plugin URI of the plugin
 #: oli-abandoned-cart-recovery.php
-msgid "https://github.com/bigrat95/oli-abandoned-cart-recovery"
+msgid "https://github.com/olivierbigras/oli-abandoned-cart-recovery"
 msgstr ""
 
 #. Description of the plugin

@@ -139,4 +139,19 @@ class OLI_ACR_Lang_TranslatePress extends OLI_ACR_Lang_Adapter {
 			$GLOBALS['TRP_LANGUAGE'] = $previous['lang']; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited, WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Variable globale de TranslatePress.
 		}
 	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param string $text   Texte.
+	 * @param string $locale Locale voulue.
+	 * @return string
+	 */
+	public function translate_text( $text, $locale ) {
+		if ( '' === (string) $text || ! function_exists( 'trp_translate' ) ) {
+			return $text;
+		}
+		$translated = trp_translate( (string) $text, $locale, false );
+		return is_string( $translated ) && '' !== $translated ? $translated : $text;
+	}
 }
