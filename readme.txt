@@ -5,7 +5,7 @@ Tags: abandoned cart, woocommerce, cart recovery, pending orders, multilingual
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,7 +76,7 @@ It works with the **classic checkout** and the **block checkout**, is compatible
 * One indexed `UPDATE` marks carts as abandoned; reminders are processed in batches (`oli_acr_batch_size` filter), under an atomic lock with a time budget so two runs never send the same reminder
 * No work on the front end besides the checkout script (about 3 KB, no jQuery); settings are autoloaded, so no extra query on other pages
 * Works with HPOS and with the legacy order storage
-* No external service, no tracking pixel
+* No tracking pixel and no automatic call to a third party: cart and customer data stay in the store. Optional Donate links open PayPal only when an administrator clicks them (see External services)
 
 == Installation ==
 
@@ -168,7 +168,50 @@ The plugin is written in English and fully translatable (text domain `oli-abando
 
 == Privacy ==
 
-The plugin stores, in the store's own database: the email, phone, first and last name typed on the checkout page, the cart content, and the reminder email history. No data is sent to a third party. A suggested text is added to **Settings > Privacy**, and the data can be exported or erased with the WordPress privacy tools.
+The plugin stores, in the store's own database: the email, phone, first and last name typed on the checkout page, the cart content, and the reminder email history. Cart and customer data stay on the store: they are never sent to the plugin author or to a third-party recovery service.
+
+Optional third-party links (PayPal Donate, the author's website, the public GitHub repository, and a Polylang documentation link) are described under External services. They are used only when someone clicks them; no cart or customer data is sent.
+
+A suggested text is added to **Settings > Privacy**, and the data can be exported or erased with the WordPress privacy tools.
+
+== External services ==
+
+This plugin does not phone home and does not load scripts, styles or fonts from a CDN. It does not call a third-party API. The only third-party destinations are links an administrator (or a visitor of the Plugins screen) can choose to open:
+
+= PayPal (paypal.com) =
+
+Optional donation links (Plugins screen, plugin footer, dismissible support notice, and the WordPress.org Donate link) open PayPal's hosted donate page in a new tab when someone clicks them. The plugin does not call the PayPal API and does not send store, cart or customer data. PayPal receives only what the donor submits on PayPal's own form.
+
+* When: only after someone clicks a Donate or "Buy me a coffee" link
+* Data sent by the plugin: none. PayPal's page may then collect the donor's PayPal account details
+* Terms of Service: https://www.paypal.com/legalhub/useragreement-full
+* Privacy Policy: https://www.paypal.com/legalhub/privacy-full
+
+= olivierbigras.com =
+
+The plugin Author URI points to the author's website. WordPress may display that link on the Plugins screen. The plugin does not load assets from, or make HTTP requests to, this site.
+
+* When: only if someone clicks the author link
+* Data sent by the plugin: none (a normal browser request if the link is opened)
+* Website: https://olivierbigras.com
+
+= GitHub (github.com/olivierbigras) =
+
+The Plugin URI points to the public source repository. The plugin does not load assets from GitHub and does not send store data there.
+
+* When: only if someone clicks the plugin URI
+* Data sent by the plugin: none
+* Terms of Service: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+* Privacy Policy: https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement
+
+= Polylang (polylang.pro) =
+
+When Polylang is active without Polylang for WooCommerce, a dismissible admin notice includes a documentation link to the Polylang for WooCommerce download page. The plugin does not call that site.
+
+* When: only if an administrator clicks the link in that notice
+* Data sent by the plugin: none
+* Terms of Service: https://polylang.pro/terms/
+* Privacy Policy: https://polylang.pro/privacy-policy/
 
 == Screenshots ==
 
@@ -179,6 +222,11 @@ The plugin stores, in the store's own database: the email, phone, first and last
 5. Cart reminder email received by the customer, with the cart items and the recovery button
 
 == Changelog ==
+
+= 1.1.6 =
+* WordPress.org: move the Donate notice dismiss handler from an inline script into the enqueued admin.js file (and the footer donate spacing into admin.css)
+* WordPress.org: document optional third-party links (PayPal Donate, author website, GitHub repository, Polylang documentation) in a new External services section
+* Uninstall now also deletes the Donate notice dismissal user meta (`oli_acr_donate_dismissed`)
 
 = 1.1.5 =
 * Maintenance: GitHub links updated to github.com/olivierbigras (account renamed from bigrat95). No functional change.
@@ -258,6 +306,9 @@ The plugin stores, in the store's own database: the email, phone, first and last
 * French (Canada) and French (France) translations
 
 == Upgrade Notice ==
+
+= 1.1.6 =
+WordPress.org review: no more inline admin script; External services section documents optional PayPal / author / GitHub / Polylang links (click only, no cart data sent).
 
 = 1.1.5 =
 Maintenance release: GitHub links updated. No functional change.

@@ -87,7 +87,7 @@ if ( oli_acr_uninstall_table_exists( $oli_acr_hpos_meta ) ) {
 	$wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE meta_key LIKE %s OR meta_key LIKE %s', $oli_acr_hpos_meta, $oli_acr_like_private, $oli_acr_like_consent ) );
 }
 $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE %s OR meta_key LIKE %s", $oli_acr_like_private, $oli_acr_like_consent ) );
-$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE %s OR meta_key LIKE %s", $oli_acr_like_private, $oli_acr_like_consent ) );
+$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE %s OR meta_key LIKE %s OR meta_key = %s", $oli_acr_like_private, $oli_acr_like_consent, 'oli_acr_donate_dismissed' ) );
 
 // Sessions WooCommerce : retire les clés oli_acr_* des sessions en cours, et la case de consentement du
 // checkout en blocs (champ additionnel « oli-acr/consent »), rangée par WooCommerce dans les métadonnées
