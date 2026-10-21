@@ -90,6 +90,7 @@ class OLI_ACR_Admin {
 
 	/**
 	 * Avis de soutien (fermable) sur les écrans du plugin uniquement.
+	 * Le rejet est mémorisé par assets/js/admin.js (pas de script inline).
 	 *
 	 * @return void
 	 */
@@ -121,21 +122,6 @@ class OLI_ACR_Admin {
 				?>
 			</p>
 		</div>
-		<script>
-		(function () {
-			var notice = document.querySelector('.oli-acr-donate-notice');
-			if (!notice || typeof oliAcrAdmin === 'undefined') return;
-			notice.addEventListener('click', function (e) {
-				if (!e.target.classList.contains('notice-dismiss')) return;
-				var body = new FormData();
-				body.append('action', 'oli_acr_dismiss_donate');
-				body.append('nonce', oliAcrAdmin.donateNonce || '');
-				if (window.fetch) {
-					fetch(oliAcrAdmin.ajaxUrl || (typeof ajaxurl !== 'undefined' ? ajaxurl : ''), { method: 'POST', body: body, credentials: 'same-origin' });
-				}
-			});
-		})();
-		</script>
 		<?php
 	}
 
@@ -306,7 +292,7 @@ class OLI_ACR_Admin {
 			default:
 				self::render_dashboard();
 		}
-		echo '<p class="description" style="margin-top:20px;">';
+		echo '<p class="description oli-acr-donate-footer">';
 		echo wp_kses(
 			sprintf(
 				/* translators: %s: donate URL */

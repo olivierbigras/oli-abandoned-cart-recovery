@@ -15,6 +15,7 @@
 .oli-acr-wrap .oli-acr-role { display: inline-block; margin: 4px 12px 0 0; }
 .oli-acr-wrap .oli-acr-periods { float: none; margin: 12px 0 0; }
 .oli-acr-wrap .oli-acr-test { margin-bottom: 24px; }
+.oli-acr-wrap .oli-acr-donate-footer { margin-top: 20px; }
 .oli-acr-wrap .oli-acr-coupon-missing { color: #b32d2e; }
 /* Colonne Client : l'adresse courriel ne se coupe jamais au milieu (B7). */
 .oli-acr-wrap .wp-list-table .column-email { width: 24%; min-width: 220px; }
