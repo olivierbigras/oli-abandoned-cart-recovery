@@ -80,8 +80,8 @@ composer install          # outils de développement seulement (vendor/ est igno
 composer lint             # PHPCS : WordPress-Extra, WordPress-Docs, PHPCompatibilityWP 7.4+ (phpcs.xml.dist)
 composer analyse          # PHPStan niveau 6 + phpstan-wordpress + stubs WooCommerce (phpstan.neon.dist)
 wp plugin check oli-abandoned-cart-recovery   # Plugin Check officiel, sur un WordPress de test
-wp i18n make-pot . languages/oli-abandoned-cart-recovery.pot --exclude=vendor,tests,tools,languages   # languages/ est versionné et inclus dans le ZIP git archive (GitHub)
-bash tools/build-zip.sh   # zip de distribution (sans vendor, tests, tools, phpcs.xml.dist ni phpstan.neon.dist) ; le ZIP GitHub utilise git archive (export-ignore)
+wp i18n make-pot . languages/oli-abandoned-cart-recovery.pot --exclude=vendor,tests,tools,languages   # languages/ est versionné et inclus dans les ZIP (git archive et build-zip)
+bash tools/build-zip.sh   # zip de distribution (avec languages/, sans vendor, tests, tools, phpcs.xml.dist ni phpstan.neon.dist) ; le ZIP GitHub utilise git archive (export-ignore)
 # Tests de bout en bout, sur un WordPress LOCAL de test et une instance Mailpit DÉDIÉE (le setup vide la boîte) :
 OLI_ACR_E2E_URL=http://localhost:8898 OLI_ACR_E2E_MAILPIT=http://127.0.0.1:8026 OLI_ACR_E2E_WP=/chemin/wp python3 tests/run-e2e.py
 ```

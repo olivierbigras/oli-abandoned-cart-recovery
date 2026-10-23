@@ -224,7 +224,7 @@ When Polylang is active without Polylang for WooCommerce, a dismissible admin no
 == Changelog ==
 
 = 1.1.7 =
-* Include `languages/` (POT and French translations) in the GitHub / `git archive` ZIP so translators and GitHub installs receive the catalog
+* Include `languages/` (POT and French translations) in the GitHub / `git archive` ZIP and in the WordPress.org / `build-zip.sh` package
 * Security: use the `wp_verify_nonce()` result directly in a conditional on the unsubscribe confirmation form (Plugin Check)
 
 = 1.1.6 =

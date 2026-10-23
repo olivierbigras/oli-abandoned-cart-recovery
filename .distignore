@@ -1,5 +1,4 @@
 # Exclus du zip de distribution (wp dist-archive) : identique à tools/build-zip.sh et à .gitattributes.
-# languages/ reste dans le dépôt (import sur translate.wordpress.org), jamais dans le paquet wp.org (revue 1.1.1).
 .git
 .gitignore
 .gitattributes
@@ -10,9 +9,9 @@
 phpcs.xml.dist
 phpstan.neon.dist
 README.md
+CHANGELOG.md
 tests
 tools
-languages
 composer.json
 composer.lock
 vendor
