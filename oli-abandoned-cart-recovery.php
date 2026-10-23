@@ -3,7 +3,7 @@
  * Plugin Name: Oli Abandoned Cart Recovery
  * Plugin URI: https://github.com/olivierbigras/oli-abandoned-cart-recovery
  * Description: Lightweight abandoned cart and pending order recovery for WooCommerce. Captures the checkout email as soon as it is typed (classic and block checkout), sends a sequence of reminder emails with unique coupons, and tracks recovered sales.
- * Version: 1.1.6
+ * Version: 1.1.7
  * Requires at least: 6.4
  * Requires PHP: 7.4
  * Requires Plugins: woocommerce
@@ -12,6 +12,7 @@
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: oli-abandoned-cart-recovery
+ * Domain Path: /languages
  * WC requires at least: 8.2
  * WC tested up to: 11.1
  *
@@ -22,7 +23,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'OLI_ACR_VERSION', '1.1.6' );
+define( 'OLI_ACR_VERSION', '1.1.7' );
 define( 'OLI_ACR_DB_VERSION', '1.1.0' );
 define( 'OLI_ACR_FILE', __FILE__ );
 define( 'OLI_ACR_DIR', plugin_dir_path( __FILE__ ) );
@@ -46,6 +47,21 @@ require_once OLI_ACR_DIR . 'includes/class-oli-acr-privacy.php';
 
 register_activation_hook( __FILE__, array( 'OLI_ACR_Install', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'OLI_ACR_Install', 'deactivate' ) );
+
+/**
+ * Charge le text domain depuis languages/ (WordPress < 6.7 uniquement).
+ * WordPress 6.7+ le charge automatiquement ; load_plugin_textdomain() y déclenche _doing_it_wrong().
+ *
+ * @return void
+ */
+function oli_acr_load_textdomain() {
+	// Requis pour WordPress 6.4–6.6 (Requires at least: 6.4). WP 6.7+ charge le domaine automatiquement.
+	load_plugin_textdomain( 'oli-abandoned-cart-recovery', false, dirname( OLI_ACR_BASENAME ) . '/languages' ); // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions -- needed below WP 6.7; this callback is only hooked when $wp_version < 6.7.
+}
+
+if ( isset( $GLOBALS['wp_version'] ) && version_compare( (string) $GLOBALS['wp_version'], '6.7', '<' ) ) {
+	add_action( 'init', 'oli_acr_load_textdomain' );
+}
 
 // Déclaration de compatibilité HPOS et checkout en blocs.
 add_action(
