@@ -209,9 +209,18 @@ class OLI_ACR_Recovery {
 			wp_die( esc_html__( 'This unsubscribe link is not valid.', 'oli-abandoned-cart-recovery' ), esc_html( $title ), array( 'response' => 400 ) );
 		}
 
-		$confirmed = isset( $_POST['oli_acr_confirm'] ) && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'oli_acr_unsub_' . $email );
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce is verified immediately below when present.
+		$confirmed = false;
+		if ( isset( $_POST['oli_acr_confirm'] ) ) {
+			if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'oli_acr_unsub_' . $email ) ) {
+				$confirmed = false;
+			} else {
+				$confirmed = true;
+			}
+		}
 		// Désabonnement en un clic (RFC 8058) : POST avec List-Unsubscribe=One-Click.
-		$one_click = isset( $_POST['List-Unsubscribe'] ) && 'One-Click' === sanitize_text_field( wp_unslash( $_POST['List-Unsubscribe'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$one_click = isset( $_POST['List-Unsubscribe'] ) && 'One-Click' === sanitize_text_field( wp_unslash( $_POST['List-Unsubscribe'] ) );
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( $confirmed || $one_click || oli_acr_is_unsubscribed( $email ) ) {
 			oli_acr_unsubscribe( $email );

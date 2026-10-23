@@ -5,7 +5,7 @@ Tags: abandoned cart, woocommerce, cart recovery, pending orders, multilingual
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -223,6 +223,10 @@ When Polylang is active without Polylang for WooCommerce, a dismissible admin no
 
 == Changelog ==
 
+= 1.1.7 =
+* Include `languages/` (POT and French translations) in the GitHub / `git archive` ZIP so translators and GitHub installs receive the catalog
+* Security: use the `wp_verify_nonce()` result directly in a conditional on the unsubscribe confirmation form (Plugin Check)
+
 = 1.1.6 =
 * WordPress.org: move the Donate notice dismiss handler from an inline script into the enqueued admin.js file (and the footer donate spacing into admin.css)
 * WordPress.org: document optional third-party links (PayPal Donate, author website, GitHub repository, Polylang documentation) in a new External services section
@@ -306,6 +310,9 @@ When Polylang is active without Polylang for WooCommerce, a dismissible admin no
 * French (Canada) and French (France) translations
 
 == Upgrade Notice ==
+
+= 1.1.7 =
+GitHub ZIP now includes translation files. Unsubscribe nonce check rewritten for Plugin Check (same behaviour).
 
 = 1.1.6 =
 WordPress.org review: no more inline admin script; External services section documents optional PayPal / author / GitHub / Polylang links (click only, no cart data sent).
