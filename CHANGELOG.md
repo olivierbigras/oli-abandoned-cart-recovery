@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-23
+
+* composer.json : nom du paquet renommé de bigrat95/ en olivierbigras/
+
 ## 1.1.7
 
 * Include `languages/` (POT and French translations) in the GitHub / `git archive` ZIP and in the WordPress.org / `build-zip.sh` package
