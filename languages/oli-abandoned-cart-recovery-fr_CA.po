@@ -1,14 +1,14 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Oli Abandoned Cart Recovery 1.1.1\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/dev-v101\n"
+"Project-Id-Version: Oli Abandoned Cart Recovery 1.1.7\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oli-abandoned-cart-recovery\n"
 "Last-Translator: Olivier Bigras <oli@olivierbigras.com>\n"
 "Language-Team: Français du Canada\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T02:25:51+00:00\n"
-"PO-Revision-Date: 2026-10-05 23:12-0400\n"
+"POT-Creation-Date: 2026-10-23T04:30:06+00:00\n"
+"PO-Revision-Date: 2026-10-23 00:32-0400\n"
 "Language: fr_CA\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Domain: oli-abandoned-cart-recovery\n"
@@ -1227,16 +1227,16 @@ msgstr "L'extension n'a pas pu être activée"
 #: includes/admin/class-oli-acr-admin.php:71
 #: includes/admin/class-oli-acr-admin.php:87
 msgid "Donate"
-msgstr ""
+msgstr "Faire un don"
 
 #. translators: %s: donate URL
 #: includes/admin/class-oli-acr-admin.php:111
 #, php-format
 msgid "Enjoying Oli Abandoned Cart Recovery? <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">Buy me a coffee</a> — your support keeps the plugin free and maintained."
-msgstr ""
+msgstr "Vous aimez Oli Abandoned Cart Recovery? <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">Offrez-moi un café</a> — votre soutien garde l'extension gratuite et maintenue."
 
 #. translators: %s: donate URL
 #: includes/admin/class-oli-acr-admin.php:299
 #, php-format
 msgid "If this plugin helps you, please consider a <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">donation</a>. Thank you!"
-msgstr ""
+msgstr "Si cette extension vous aide, pensez à faire un <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">don</a>. Merci!"
