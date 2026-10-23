@@ -225,7 +225,9 @@ When Polylang is active without Polylang for WooCommerce, a dismissible admin no
 
 = 1.1.7 =
 * Include `languages/` (POT and French translations) in the GitHub / `git archive` ZIP and in the WordPress.org / `build-zip.sh` package
+* Declare `Domain Path: /languages` and load bundled translations on `init` only on WordPress < 6.7
 * Security: use the `wp_verify_nonce()` result directly in a conditional on the unsubscribe confirmation form (Plugin Check)
+* Unsubscribe: an invalid confirmation nonce redisplays the form with a translatable error message
 
 = 1.1.6 =
 * WordPress.org: move the Donate notice dismiss handler from an inline script into the enqueued admin.js file (and the footer donate spacing into admin.css)
@@ -312,7 +314,7 @@ When Polylang is active without Polylang for WooCommerce, a dismissible admin no
 == Upgrade Notice ==
 
 = 1.1.7 =
-GitHub ZIP now includes translation files. Unsubscribe nonce check rewritten for Plugin Check (same behaviour).
+Translation files in GitHub and distribution ZIPs (Domain Path /languages). Invalid unsubscribe confirmation shows the form with an error.
 
 = 1.1.6 =
 WordPress.org review: no more inline admin script; External services section documents optional PayPal / author / GitHub / Polylang links (click only, no cart data sent).

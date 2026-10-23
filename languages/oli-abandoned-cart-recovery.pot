@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-23T04:30:06+00:00\n"
+"POT-Creation-Date: 2026-10-23T04:45:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: oli-abandoned-cart-recovery\n"
@@ -832,7 +832,7 @@ msgstr ""
 
 #. translators: 1: minimum PHP version, 2: minimum WordPress version.
 #: includes/class-oli-acr-install.php:31
-#: oli-abandoned-cart-recovery.php:140
+#: oli-abandoned-cart-recovery.php:155
 #, php-format
 msgid "Oli Abandoned Cart Recovery requires PHP %1$s and WordPress %2$s or later. The plugin is inactive until the site is updated."
 msgstr ""
@@ -1007,30 +1007,34 @@ msgid "This unsubscribe link is not valid."
 msgstr ""
 
 #. translators: %s: email address.
-#: includes/class-oli-acr-recovery.php:230
+#: includes/class-oli-acr-recovery.php:232
 #, php-format
 msgid "%s will no longer receive cart reminder emails from this store."
 msgstr ""
 
-#: includes/class-oli-acr-recovery.php:233
+#: includes/class-oli-acr-recovery.php:235
 msgid "Back to the store"
 msgstr ""
 
-#. translators: %s: email address.
 #: includes/class-oli-acr-recovery.php:241
+msgid "This confirmation is no longer valid. Please try again."
+msgstr ""
+
+#. translators: %s: email address.
+#: includes/class-oli-acr-recovery.php:246
 #, php-format
 msgid "Stop receiving cart reminder emails at %s?"
 msgstr ""
 
-#: includes/class-oli-acr-recovery.php:245
+#: includes/class-oli-acr-recovery.php:250
 msgid "Yes, unsubscribe me"
 msgstr ""
 
-#: includes/class-oli-acr-recovery.php:399
+#: includes/class-oli-acr-recovery.php:404
 msgid "Order recovered from an abandoned cart reminder (Oli Abandoned Cart Recovery)."
 msgstr ""
 
-#: includes/class-oli-acr-recovery.php:421
+#: includes/class-oli-acr-recovery.php:426
 msgid "Pending order recovered after a reminder (Oli Abandoned Cart Recovery)."
 msgstr ""
 
@@ -1223,7 +1227,7 @@ msgctxt "cart status"
 msgid "Send failed"
 msgstr ""
 
-#: oli-abandoned-cart-recovery.php:125
+#: oli-abandoned-cart-recovery.php:140
 msgid "Oli Abandoned Cart Recovery requires WooCommerce to be installed and active."
 msgstr ""
 

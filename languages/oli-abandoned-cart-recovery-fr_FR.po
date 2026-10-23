@@ -979,30 +979,30 @@ msgid "This unsubscribe link is not valid."
 msgstr "Ce lien de désabonnement n'est pas valide."
 
 #. translators: %s: email address.
-#: includes/class-oli-acr-recovery.php:230
+#: includes/class-oli-acr-recovery.php:232
 #, php-format
 msgid "%s will no longer receive cart reminder emails from this store."
 msgstr "%s ne recevra plus d'e-mails de relance de panier de cette boutique."
 
-#: includes/class-oli-acr-recovery.php:233
+#: includes/class-oli-acr-recovery.php:235
 msgid "Back to the store"
 msgstr "Retour à la boutique"
 
 #. translators: %s: email address.
-#: includes/class-oli-acr-recovery.php:241
+#: includes/class-oli-acr-recovery.php:246
 #, php-format
 msgid "Stop receiving cart reminder emails at %s?"
 msgstr "Ne plus recevoir d'e-mails de relance de panier à l'adresse %s ?"
 
-#: includes/class-oli-acr-recovery.php:245
+#: includes/class-oli-acr-recovery.php:250
 msgid "Yes, unsubscribe me"
 msgstr "Oui, désabonnez-moi"
 
-#: includes/class-oli-acr-recovery.php:399
+#: includes/class-oli-acr-recovery.php:404
 msgid "Order recovered from an abandoned cart reminder (Oli Abandoned Cart Recovery)."
 msgstr "Commande récupérée à la suite d'une relance de panier abandonné (Oli Abandoned Cart Recovery)."
 
-#: includes/class-oli-acr-recovery.php:421
+#: includes/class-oli-acr-recovery.php:426
 msgid "Pending order recovered after a reminder (Oli Abandoned Cart Recovery)."
 msgstr "Commande en attente récupérée après une relance (Oli Abandoned Cart Recovery)."
 
@@ -1195,7 +1195,7 @@ msgctxt "cart status"
 msgid "Send failed"
 msgstr "Échec d'envoi"
 
-#: oli-abandoned-cart-recovery.php:125
+#: oli-abandoned-cart-recovery.php:140
 msgid "Oli Abandoned Cart Recovery requires WooCommerce to be installed and active."
 msgstr "Oli Abandoned Cart Recovery nécessite que WooCommerce soit installé et activé."
 
@@ -1215,7 +1215,7 @@ msgstr "Bonne nouvelle ! Un panier abandonné a été récupéré et est deven
 
 #. translators: 1: minimum PHP version, 2: minimum WordPress version.
 #: includes/class-oli-acr-install.php:31
-#: oli-abandoned-cart-recovery.php:140
+#: oli-abandoned-cart-recovery.php:155
 #, php-format
 msgid "Oli Abandoned Cart Recovery requires PHP %1$s and WordPress %2$s or later. The plugin is inactive until the site is updated."
 msgstr "Oli Abandoned Cart Recovery nécessite PHP %1$s et WordPress %2$s ou une version ultérieure. L'extension reste inactive tant que le site n'est pas mis à jour."
@@ -1240,3 +1240,7 @@ msgstr "Vous aimez Oli Abandoned Cart Recovery ? <a href=\"%s\" target=\"_blan
 #, php-format
 msgid "If this plugin helps you, please consider a <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">donation</a>. Thank you!"
 msgstr "Si cette extension vous aide, pensez à faire un <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">don</a>. Merci !"
+
+#: includes/class-oli-acr-recovery.php:241
+msgid "This confirmation is no longer valid. Please try again."
+msgstr "Cette confirmation n'est plus valable. Veuillez réessayer."

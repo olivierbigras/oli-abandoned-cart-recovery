@@ -210,10 +210,12 @@ class OLI_ACR_Recovery {
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce is verified immediately below when present.
-		$confirmed = false;
+		$confirmed   = false;
+		$nonce_error = false;
 		if ( isset( $_POST['oli_acr_confirm'] ) ) {
 			if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'oli_acr_unsub_' . $email ) ) {
-				$confirmed = false;
+				$confirmed   = false;
+				$nonce_error = true;
 			} else {
 				$confirmed = true;
 			}
@@ -235,6 +237,9 @@ class OLI_ACR_Recovery {
 		}
 
 		$form  = '<h1>' . esc_html( $title ) . '</h1>';
+		if ( $nonce_error ) {
+			$form .= '<p>' . esc_html__( 'This confirmation is no longer valid. Please try again.', 'oli-abandoned-cart-recovery' ) . '</p>';
+		}
 		$form .= '<p>' . esc_html(
 			sprintf(
 				/* translators: %s: email address. */
