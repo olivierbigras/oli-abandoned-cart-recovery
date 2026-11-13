@@ -19,9 +19,19 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 class OLI_ACR_Carts_Table extends WP_List_Table {
 
 	/**
-	 * Constructeur.
+	 * Statuts filtrés par la vue courante (vide = tous).
+	 *
+	 * @var string[]
 	 */
-	public function __construct() {
+	private $statuses = array();
+
+	/**
+	 * Constructeur.
+	 *
+	 * @param string[] $statuses Statuts de la vue (vide = tous).
+	 */
+	public function __construct( $statuses = array() ) {
+		$this->statuses = array_values( array_intersect( array_map( 'strval', (array) $statuses ), array_keys( oli_acr_statuses() ) ) );
 		parent::__construct(
 			array(
 				'singular' => 'oli_acr_cart',
@@ -32,27 +42,26 @@ class OLI_ACR_Carts_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Colonnes.
+	 * Colonnes (1.2) : Client, Statut, Articles, Total, Relances, Date.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, string>
 	 */
 	public function get_columns() {
 		return array(
-			'cb'          => '<input type="checkbox" />',
-			'email'       => __( 'Customer', 'oli-abandoned-cart-recovery' ),
-			'status'      => __( 'Status', 'oli-abandoned-cart-recovery' ),
-			'items'       => __( 'Products', 'oli-abandoned-cart-recovery' ),
-			'cart_total'  => __( 'Total', 'oli-abandoned-cart-recovery' ),
-			'emails_sent' => __( 'Emails sent', 'oli-abandoned-cart-recovery' ),
-			'updated_at'  => __( 'Last activity', 'oli-abandoned-cart-recovery' ),
-			'order_id'    => __( 'Order', 'oli-abandoned-cart-recovery' ),
+			'cb'         => '<input type="checkbox" />',
+			'email'      => __( 'Customer', 'oli-abandoned-cart-recovery' ),
+			'status'     => __( 'Status', 'oli-abandoned-cart-recovery' ),
+			'items'      => __( 'Items', 'oli-abandoned-cart-recovery' ),
+			'cart_total' => __( 'Total', 'oli-abandoned-cart-recovery' ),
+			'reminders'  => __( 'Reminders', 'oli-abandoned-cart-recovery' ),
+			'updated_at' => __( 'Date', 'oli-abandoned-cart-recovery' ),
 		);
 	}
 
 	/**
 	 * Colonnes triables.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, array<int, bool|string>>
 	 */
 	protected function get_sortable_columns() {
 		return array(
@@ -65,32 +74,14 @@ class OLI_ACR_Carts_Table extends WP_List_Table {
 	/**
 	 * Actions groupées.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, string>
 	 */
 	protected function get_bulk_actions() {
 		return array( 'delete' => __( 'Delete', 'oli-abandoned-cart-recovery' ) );
 	}
 
 	/**
-	 * Vues par statut.
-	 *
-	 * @return array<mixed>
-	 */
-	protected function get_views() {
-		$counts  = OLI_ACR_Carts::count_by_status();
-		$current = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$base    = admin_url( 'admin.php?page=oli-acr&tab=carts' );
-		$views   = array(
-			'all' => sprintf( '<a href="%s"%s>%s <span class="count">(%d)</span></a>', esc_url( $base ), '' === $current ? ' class="current"' : '', esc_html__( 'All', 'oli-abandoned-cart-recovery' ), array_sum( $counts ) ),
-		);
-		foreach ( oli_acr_statuses() as $key => $label ) {
-			$views[ $key ] = sprintf( '<a href="%s"%s>%s <span class="count">(%d)</span></a>', esc_url( add_query_arg( 'status', $key, $base ) ), $current === $key ? ' class="current"' : '', esc_html( $label ), (int) $counts[ $key ] );
-		}
-		return $views;
-	}
-
-	/**
-	 * Prépare les lignes.
+	 * Préparation des lignes.
 	 *
 	 * @return void
 	 */
@@ -100,7 +91,6 @@ class OLI_ACR_Carts_Table extends WP_List_Table {
 		$per_page = 20;
 		$paged    = $this->get_pagenum();
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$status  = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
 		$search  = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
 		$orderby = isset( $_GET['orderby'] ) && in_array( $_GET['orderby'], array( 'email', 'cart_total', 'updated_at' ), true ) ? sanitize_key( $_GET['orderby'] ) : 'updated_at';
 		$order   = isset( $_GET['order'] ) && 'asc' === strtolower( sanitize_key( $_GET['order'] ) ) ? 'ASC' : 'DESC';
@@ -108,9 +98,9 @@ class OLI_ACR_Carts_Table extends WP_List_Table {
 
 		$where  = '1=1';
 		$params = array();
-		if ( $status && array_key_exists( $status, oli_acr_statuses() ) ) {
-			$where   .= ' AND status = %s';
-			$params[] = $status;
+		if ( $this->statuses ) {
+			$where .= ' AND status IN (' . implode( ',', array_fill( 0, count( $this->statuses ), '%s' ) ) . ')';
+			$params = array_merge( $params, $this->statuses );
 		}
 		if ( '' !== $search ) {
 			$where .= ' AND (email LIKE %s OR first_name LIKE %s OR last_name LIKE %s OR phone LIKE %s)';
@@ -142,37 +132,40 @@ class OLI_ACR_Carts_Table extends WP_List_Table {
 	 * @return string
 	 */
 	protected function column_cb( $item ) {
-		return '<input type="checkbox" name="cart_ids[]" value="' . esc_attr( $item->id ) . '" />';
+		$id = 'oli-acr-cb-' . (int) $item->id;
+		return '<label class="screen-reader-text" for="' . esc_attr( $id ) . '">' . esc_html(
+			/* translators: %s: customer email. */
+			sprintf( __( 'Select the cart of %s', 'oli-abandoned-cart-recovery' ), $item->email )
+		) . '</label><input type="checkbox" id="' . esc_attr( $id ) . '" name="cart_ids[]" value="' . esc_attr( $item->id ) . '" />';
 	}
 
 	/**
-	 * Colonne client.
+	 * Colonne Client : courriel (lien vers le panneau), nom, actions toujours visibles (pas seulement au survol).
 	 *
 	 * @param object $item Ligne.
 	 * @return string
 	 */
 	protected function column_email( $item ) {
-		$out  = '<strong class="oli-acr-email">' . esc_html( $item->email ) . '</strong>';
+		$args = array( 'cart' => (int) $item->id );
+		$view = OLI_ACR_Admin_Carts::current_view();
+		if ( 'all' !== $view ) {
+			$args['view'] = $view;
+		}
+		$out  = '<a class="row-title oli-acr-email" href="' . esc_url( OLI_ACR_Admin::url( 'carts', $args ) ) . '">' . esc_html( $item->email ) . '</a>';
 		$name = trim( $item->first_name . ' ' . $item->last_name );
 		if ( $name ) {
 			$out .= '<br>' . esc_html( $name );
 		}
-		if ( $item->phone ) {
-			$out .= '<br>' . esc_html( $item->phone );
-		}
-		if ( $item->user_id ) {
-			$out .= '<br><em>' . esc_html__( 'Registered customer', 'oli-abandoned-cart-recovery' ) . '</em>';
-		}
 		$actions = array();
-		if ( in_array( $item->status, OLI_ACR_Carts::LIVE_STATUSES, true ) && ! (int) $item->order_id && ! oli_acr_is_unsubscribed( $item->email ) ) {
-			$actions['send'] = '<a href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=oli_acr_cart_action&do=send&cart=' . $item->id ), 'oli_acr_cart_action_send_' . $item->id ) ) . '">' . esc_html__( 'Send next reminder now', 'oli-abandoned-cart-recovery' ) . '</a>';
+		if ( OLI_ACR_Admin_Carts::can_send( $item ) ) {
+			$actions['send'] = '<a href="' . esc_url( OLI_ACR_Admin_Carts::action_url( $item, 'send' ) ) . '">' . esc_html__( 'Send the next reminder', 'oli-abandoned-cart-recovery' ) . '</a>';
 		}
-		$actions['delete'] = '<a class="submitdelete" href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=oli_acr_cart_action&do=delete&cart=' . $item->id ), 'oli_acr_cart_action_delete_' . $item->id ) ) . '">' . esc_html__( 'Delete', 'oli-abandoned-cart-recovery' ) . '</a>';
-		return $out . $this->row_actions( $actions );
+		$actions['delete'] = '<a class="submitdelete" href="' . esc_url( OLI_ACR_Admin_Carts::action_url( $item, 'delete' ) ) . '">' . esc_html__( 'Delete', 'oli-abandoned-cart-recovery' ) . '</a>';
+		return $out . $this->row_actions( $actions, true );
 	}
 
 	/**
-	 * Colonnes par défaut.
+	 * Autres colonnes.
 	 *
 	 * @param object $item        Ligne.
 	 * @param string $column_name Colonne.
@@ -181,35 +174,16 @@ class OLI_ACR_Carts_Table extends WP_List_Table {
 	protected function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'status':
-				$labels = oli_acr_statuses();
-				$label  = isset( $labels[ $item->status ] ) ? $labels[ $item->status ] : $item->status;
-				$extra  = ( 'recovered' === $item->status && 'direct' === $item->recovered_via ) ? '<br><small>' . esc_html__( '(ordered without reminder)', 'oli-abandoned-cart-recovery' ) . '</small>' : '';
-				if ( 'failed' === $item->status ) {
-					$extra .= '<br><small class="oli-acr-error">' . esc_html( (string) $item->last_error ) . '</small><br><small>' . ( $item->next_send_at
-						/* translators: 1: number of failed attempts, 2: date of the next attempt. */
-						? sprintf( esc_html__( '%1$d failed attempt(s), next attempt: %2$s', 'oli-abandoned-cart-recovery' ), (int) $item->fail_count, oli_acr_admin_date( $item->next_send_at ) )
-						/* translators: %d: number of failed attempts. */
-						: sprintf( esc_html__( '%d failed attempt(s), no further attempt. Use "Send next reminder now" after fixing your mail settings.', 'oli-abandoned-cart-recovery' ), (int) $item->fail_count ) ) . '</small>';
-				}
-				return '<mark class="oli-acr-status oli-acr-status-' . esc_attr( $item->status ) . '">' . esc_html( $label ) . '</mark>' . $extra;
+				return OLI_ACR_Admin_Carts::status_pill( (string) $item->status );
 			case 'items':
-				$lines = array();
-				foreach ( OLI_ACR_Carts::items( $item ) as $line ) {
-					$lines[] = esc_html( $line['name'] . ' × ' . $line['quantity'] );
-				}
-				return implode( '<br>', $lines );
+				return esc_html( OLI_ACR_Admin_Carts::items_summary( $item ) );
 			case 'cart_total':
 				return wp_kses_post( wc_price( (float) $item->cart_total, array( 'currency' => $item->currency ) ) );
-			case 'emails_sent':
-				return esc_html( (string) (int) $item->emails_sent ) . ( $item->last_email_at ? '<br><small>' . oli_acr_admin_date( $item->last_email_at ) . '</small>' : '' );
+			case 'reminders':
+				$planned = count( OLI_ACR_Templates::active( 'cart' ) );
+				return esc_html( $planned > 0 ? (int) $item->emails_sent . ' / ' . max( $planned, (int) $item->emails_sent ) : (string) (int) $item->emails_sent );
 			case 'updated_at':
-				return oli_acr_admin_date( $item->updated_at );
-			case 'order_id':
-				if ( ! $item->order_id ) {
-					return '—';
-				}
-				$order = wc_get_order( $item->order_id );
-				return $order ? '<a href="' . esc_url( $order->get_edit_order_url() ) . '">#' . esc_html( $order->get_order_number() ) . '</a>' : '#' . esc_html( (string) $item->order_id );
+				return OLI_ACR_Admin::relative_date( (string) $item->updated_at );
 		}
 		return '';
 	}

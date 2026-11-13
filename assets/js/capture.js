@@ -55,22 +55,28 @@
 		} );
 	}
 
-	// Checkout en blocs : le libellé du consentement est du texte ; on affiche la version avec liens (HTML filtré par le serveur).
+	// Checkout en blocs : le libellé du consentement est du texte, suivi de « (facultatif) ». On affiche la
+	// version du serveur (liens, sans la mention) et la ligne d'aide liée par aria-describedby.
 	function enhanceConsentLabel() {
-		if ( ! cfg.consentHtml || cfg.consentHtml.indexOf( '<' ) === -1 ) {
+		if ( ! cfg.consentHtml ) {
 			return;
 		}
 		var input = document.querySelector( 'input[type="checkbox"][id*="oli-acr"]' );
-		if ( ! input ) {
+		if ( ! input || 'oli_acr_consent' === input.id ) {
 			return;
 		}
-		var wrap = input.closest( 'label' ) || input.parentNode;
+		var wrap  = input.closest( 'label' ) || input.parentNode;
 		var label = wrap ? wrap.querySelector( '.wc-block-components-checkbox__label' ) : null;
-		// Remis à chaque rendu qui le remplace par du texte (aucune boucle : on ne réécrit que s'il n'y a plus de balise).
-		if ( label && ! label.querySelector( 'a, strong, em' ) ) {
+		if ( ! label ) {
+			return;
+		}
+		var probe = document.createElement( 'div' );
+		probe.innerHTML = cfg.consentHtml;
+		// Remis à chaque rendu qui le remplace (aucune boucle : on ne réécrit que si le texte diffère).
+		if ( label.textContent.trim() !== probe.textContent.trim() ) {
 			label.innerHTML = cfg.consentHtml;
 		}
-		if ( label && label.getAttribute( 'data-oli-acr' ) !== '1' ) {
+		if ( label.getAttribute( 'data-oli-acr' ) !== '1' ) {
 			label.setAttribute( 'data-oli-acr', '1' );
 			// Un clic sur un lien du libellé ouvre le lien sans cocher la case.
 			label.addEventListener( 'click', function ( event ) {
@@ -78,6 +84,17 @@
 					event.stopPropagation();
 				}
 			} );
+		}
+		if ( cfg.consentHelp && ! document.getElementById( 'oli-acr-consent-help' ) ) {
+			var help = document.createElement( 'p' );
+			help.id = 'oli-acr-consent-help';
+			help.className = 'oli-acr-consent-help';
+			help.innerHTML = cfg.consentHelp;
+			var row = wrap.closest( '.wc-block-components-checkbox' ) || wrap;
+			row.parentNode.insertBefore( help, row.nextSibling );
+		}
+		if ( cfg.consentHelp ) {
+			input.setAttribute( 'aria-describedby', 'oli-acr-consent-help' );
 		}
 	}
 

@@ -27,7 +27,8 @@ class OLI_ACR_Capture {
 	 * @return void
 	 */
 	public static function init() {
-		if ( 'yes' !== oli_acr_get_setting( 'enabled' ) ) {
+		// Relances actives, ou capture permise à l'arrêt (nouvelle install, D2) : la case est en place, rien n'est envoyé.
+		if ( ! oli_acr_capture_on() ) {
 			return;
 		}
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue' ) );
@@ -39,6 +40,7 @@ class OLI_ACR_Capture {
 
 		if ( 'consent' === oli_acr_get_setting( 'guest_tracking' ) ) {
 			add_filter( 'woocommerce_checkout_fields', array( __CLASS__, 'classic_consent_field' ) );
+			add_filter( 'woocommerce_form_field', array( __CLASS__, 'classic_consent_markup' ), 10, 2 );
 			add_action( 'woocommerce_init', array( __CLASS__, 'blocks_consent_field' ) );
 		}
 	}
@@ -72,6 +74,8 @@ class OLI_ACR_Capture {
 				'delay'       => 800,
 				// Libellé HTML (liens) du consentement : le checkout en blocs n'affiche que du texte.
 				'consentHtml' => oli_acr_consent_required() ? oli_acr_consent_html() : '',
+				// Ligne d'aide sous la case (désinscription, durée de conservation, politique de confidentialité).
+				'consentHelp' => oli_acr_consent_required() ? oli_acr_consent_help_html() : '',
 			)
 		);
 	}
@@ -89,10 +93,30 @@ class OLI_ACR_Capture {
 			'type'     => 'checkbox',
 			'label'    => oli_acr_consent_html(),
 			'required' => false,
-			'class'    => array( 'form-row-wide' ),
+			'class'    => array( 'form-row-wide', 'oli-acr-consent-row' ),
 			'priority' => 115,
 		);
 		return $fields;
+	}
+
+	/**
+	 * Checkout classique : retire la mention « (facultatif) » de la case (elle l'est déjà par nature, et la
+	 * mention brouille la lecture d'une case de consentement) et ajoute la ligne d'aide liée par aria-describedby.
+	 *
+	 * @param string $field Balisage du champ.
+	 * @param string $key   Clé du champ.
+	 * @return string
+	 */
+	public static function classic_consent_markup( $field, $key ) {
+		if ( 'oli_acr_consent' !== $key || ! is_string( $field ) ) {
+			return $field;
+		}
+		$field = (string) preg_replace( '#(?:&nbsp;)?\s*<span class="optional">.*?</span>#s', '', $field );
+		$field = (string) preg_replace( '#&nbsp;\s*</label>#', '</label>', $field );
+		$field = (string) preg_replace( '#<input type="checkbox"#', '<input type="checkbox" aria-describedby="oli-acr-consent-help"', $field, 1 );
+		$help  = '<span class="oli-acr-consent-help" id="oli-acr-consent-help">' . oli_acr_consent_help_html() . '</span>';
+		$pos   = strrpos( $field, '</p>' );
+		return false === $pos ? $field . $help : substr_replace( $field, $help . '</p>', $pos, 4 );
 	}
 
 	/**

@@ -5,7 +5,7 @@ Tags: abandoned cart, woocommerce, cart recovery, pending orders, multilingual
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.7
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,15 +82,15 @@ It works with the **classic checkout** and the **block checkout**, is compatible
 
 1. Upload the `oli-abandoned-cart-recovery` folder to `/wp-content/plugins/`, or install the zip from **Plugins > Add New > Upload Plugin**
 2. Activate the plugin through the **Plugins** menu in WordPress (WooCommerce must be active)
-3. Go to **WooCommerce > Abandoned Carts > Settings** and choose the abandonment delay
-4. Go to the **Email templates** tab, review the templates and activate the ones you want
-5. Click **Send a test** to check the email
+3. Go to **WooCommerce > Cart recovery**: a 4-step setup assistant opens (consent, sequence, sender and test, turn on)
+4. Recovery emails stay off until you click **Turn on recovery emails**; carts are only saved when the shopper ticks the consent box
+5. Later, use **Emails** to edit the sequence and **Settings > Run the setup assistant again** if needed
 
 == Frequently Asked Questions ==
 
 = Is it compatible with multilingual plugins? =
 
-Yes: TranslatePress, Polylang, WPML and Weglot are detected automatically (in that order of priority: WPML, Polylang, TranslatePress, Weglot, then WordPress itself). The language of the checkout page is saved with the cart, the reminder is sent in that language, and its links open the store in that language. Under Abandoned Carts > Email templates, each template has one tab per active language. Polylang needs *Polylang for WooCommerce* or a short snippet: see "Polylang: what do I need?" below.
+Yes: TranslatePress, Polylang, WPML and Weglot are detected automatically (in that order of priority: WPML, Polylang, TranslatePress, Weglot, then WordPress itself). The language of the checkout page is saved with the cart, the reminder is sent in that language, and its links open the store in that language. Under Cart recovery > Emails, each email has one tab per active language (tabs are shown only on a multilingual site). Polylang needs *Polylang for WooCommerce* or a short snippet: see "Polylang: what do I need?" below.
 
 = Polylang: what do I need? =
 
@@ -152,7 +152,7 @@ No. Version 1.0.x did not record whether a cart was saved with the consent box t
 
 = What happens when an email cannot be sent? =
 
-The cart gets the *Send failed* status with the error message, a dismissible notice is shown on the plugin's screens and the error is logged in WooCommerce > Status > Logs (source `oli-abandoned-cart-recovery`), even without `WP_DEBUG`. The reminder is retried after 5 minutes, 30 minutes and 2 hours, then the cart stays *Send failed*; use **Send next reminder now** once your mail settings are fixed.
+The cart gets the *Send failed* status with the error message, the status banner on Dashboard and Settings turns red and the error is logged in WooCommerce > Status > Logs (source `oli-abandoned-cart-recovery`), even without `WP_DEBUG`. The reminder is retried after 5 minutes, 30 minutes and 2 hours, then the cart stays *Send failed*; use **Send the next reminder** once your mail settings are fixed.
 
 = In which language are reminders sent? =
 
@@ -180,7 +180,7 @@ This plugin does not phone home and does not load scripts, styles or fonts from 
 
 = PayPal (paypal.com) =
 
-Optional donation links (Plugins screen, plugin footer, dismissible support notice, and the WordPress.org Donate link) open PayPal's hosted donate page in a new tab when someone clicks them. The plugin does not call the PayPal API and does not send store, cart or customer data. PayPal receives only what the donor submits on PayPal's own form.
+Optional donation links (Plugins screen, dismissible support notice on the Settings screen, and the WordPress.org Donate link) open PayPal's hosted donate page in a new tab when someone clicks them. The plugin does not call the PayPal API and does not send store, cart or customer data. PayPal receives only what the donor submits on PayPal's own form.
 
 * When: only after someone clicks a Donate or "Buy me a coffee" link
 * Data sent by the plugin: none. PayPal's page may then collect the donor's PayPal account details
@@ -215,13 +215,30 @@ When Polylang is active without Polylang for WooCommerce, a dismissible admin no
 
 == Screenshots ==
 
-1. Dashboard: recovery stats (abandoned carts, emails sent, clicks, recovery rate, recovered revenue), report by day and report by template
-2. Abandoned carts list with status filters (active, abandoned, reminded, recovered, unsubscribed, send failed), including the error of a failed send
-3. Email template editor: language tabs, placeholders, unique coupon and "Send a test"
-4. Settings: the "Require consent" switch turned off, with the Quebec Law 25 / GDPR warning (consent is on by default)
-5. Cart reminder email received by the customer, with the cart items and the recovery button
+1. Dashboard: four tiles with their definitions (carts left behind, emails sent, recovered carts, recovered revenue), carts to follow up and latest recovered carts
+2. Carts: views (all, to follow up, reminded, recovered, unsubscribed) and the cart panel with its timeline
+3. Emails: the reminder sequence as cards, and the editor with a live preview using sample data
+4. Settings: a four-line summary and the advanced settings, section by section
+5. Setup assistant: consent first, recovery emails stay off until you turn them on
 
 == Changelog ==
+
+= 1.2.0 =
+* New admin: one WooCommerce submenu, **Cart recovery**, with four screens (Dashboard, Carts, Emails, Settings) instead of seven tabs; old tab URLs redirect to the matching screen or view
+* New installs: a 4-step setup assistant (consent, sequence, sender and test, turn on); recovery emails stay off until you click "Turn on recovery emails", and carts can be saved with consent meanwhile without ever being reminded automatically
+* New installs: data kept 90 days by default (unrecovered carts still deleted after 30 days); the second email (with coupon) and shop manager access stay off by default
+* Updates from 1.1.x keep every setting, email, cart and log entry as they are, never show the assistant, and show one dismissible notice on the plugin's screens
+* Updates never overwrite an email text you wrote: only a subject, body, heading or button text that is byte-for-byte identical to a former default text can be replaced by the current default (for example the English defaults written by 1.1.x on a French site); everything else, including texts in French and defaults you retouched by a single space or capital, is kept exactly as is, and running the update twice changes nothing
+* Dashboard: four tiles, each with a written definition, an empty state with a link to checkout, carts to follow up and latest recovered carts; the email report is folded
+* Carts: views instead of status tabs, actions always visible (not only on hover), a cart panel with the items and a timeline; pending orders appear as a Carts view only when the feature is on
+* Emails: the sequence as cards ordered by delay with an on/off switch, subject and preview; the editor shows a preview rendered with sample data; the log is a sub-view of Emails
+* Settings: a four-line summary and advanced settings saved section by section; turning off the consent checkbox requires an explicit confirmation and keeps a warning visible
+* Status banner on Dashboard and Settings (on, off, or email sending blocked) with a one-click switch; the donation request is shown only on Settings and can be dismissed
+* Checkout: new consent label, no "(optional)" suffix, and a help line (unsubscribe, retention period, privacy policy link) linked to the checkbox
+* Language tabs are shown only on a multilingual site, without locale codes
+* While recovery emails are off, the banner and the assistant say that consented carts may be saved but no email is sent; when you turn them on, they tell you how many carts saved meanwhile will not be reminded automatically, with a link to Carts
+* Accessibility: labels for every control, responsive screens down to 390 px without horizontal scrolling, colors follow the admin color scheme
+* Admin styles load as a minified file (the readable admin.css is included and used when SCRIPT_DEBUG is on)
 
 = 1.1.7 =
 * Include `languages/` (POT and French translations) in the GitHub / `git archive` ZIP and in the WordPress.org / `build-zip.sh` package
@@ -312,6 +329,9 @@ When Polylang is active without Polylang for WooCommerce, a dismissible admin no
 * French (Canada) and French (France) translations
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+New admin with four screens. Your settings, emails, carts and log are kept as they are; email texts you edited are never overwritten; recovery emails that were on stay on.
 
 = 1.1.7 =
 Translation files in GitHub and distribution ZIPs (Domain Path /languages). Invalid unsubscribe confirmation shows the form with an error.

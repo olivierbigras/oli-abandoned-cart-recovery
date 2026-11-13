@@ -57,7 +57,66 @@ function oli_acr_default_settings() {
 		'coupon_delete_expired' => 'yes',
 		'shop_manager_access'   => 'no',
 		'keep_data'             => 'no',
+		// 1.2 : capter les paniers (avec consentement) même quand les relances sont à l'arrêt. Les sites
+		// mis à jour depuis une 1.1.x gardent le comportement d'avant (non) ; une nouvelle install reçoit oui.
+		'capture_while_off'     => 'no',
 	);
+}
+
+/**
+ * Réglages d'une NOUVELLE installation (option oli_acr_settings absente avant l'activation) :
+ * relances à l'arrêt jusqu'à « Activer » (D2), conservation de 90 jours (D6), shop_manager non (D7).
+ * Une installation existante garde ses valeurs : ces défauts ne s'appliquent jamais à une mise à jour.
+ *
+ * @return array<mixed>
+ */
+function oli_acr_new_install_settings() {
+	$settings                      = oli_acr_default_settings();
+	$settings['enabled']           = 'no';
+	$settings['retention_days']    = 90;
+	$settings['capture_while_off'] = 'yes';
+	return $settings;
+}
+
+/**
+ * Indique si l'assistant de configuration est terminé (option séparée oli_acr_setup : pending | done).
+ *
+ * @return bool
+ */
+function oli_acr_setup_done() {
+	return 'pending' !== get_option( 'oli_acr_setup', 'done' );
+}
+
+/**
+ * Indique si les relances partent (interrupteur actif ET assistant terminé).
+ *
+ * @return bool
+ */
+function oli_acr_reminders_on() {
+	return 'yes' === oli_acr_get_setting( 'enabled' ) && oli_acr_setup_done();
+}
+
+/**
+ * Indique si les paniers sont captés à la caisse : relances actives, ou capture permise à l'arrêt.
+ *
+ * @return bool
+ */
+function oli_acr_capture_on() {
+	return 'yes' === oli_acr_get_setting( 'enabled' ) || 'yes' === oli_acr_get_setting( 'capture_while_off' );
+}
+
+/**
+ * Capacité requise pour l'écran Réglages et l'assistant (le shop_manager autorisé n'y a pas accès, D7).
+ *
+ * @return string
+ */
+function oli_acr_settings_cap() {
+	/**
+	 * Filtre la capacité de l'écran Réglages et de l'assistant.
+	 *
+	 * @param string $cap Capacité (manage_options par défaut).
+	 */
+	return (string) apply_filters( 'oli_acr_settings_capability', 'manage_options' );
 }
 
 /**
@@ -90,7 +149,50 @@ function oli_acr_get_setting( $key ) {
  * @return string
  */
 function oli_acr_default_consent_text() {
+	return sprintf(
+		/* translators: %s: store name. */
+		__( 'I agree that %s may save my email and cart to remind me about this order. I can still place the order without ticking this box.', 'oli-abandoned-cart-recovery' ),
+		wp_specialchars_decode( (string) get_bloginfo( 'name' ), ENT_QUOTES )
+	);
+}
+
+/**
+ * Texte de consentement par défaut des versions 1.0 à 1.1.x (reconnu comme « défaut » pour ne pas le figer).
+ *
+ * @return string
+ */
+function oli_acr_legacy_default_consent_text() {
 	return __( 'Save my email and cart so the store can remind me about my order.', 'oli-abandoned-cart-recovery' );
+}
+
+/**
+ * Ligne d'aide sous la case de consentement : désinscription, durée de conservation et, si la page
+ * existe et est publiée, lien vers la politique de confidentialité du site (jamais de lien cassé).
+ *
+ * @return string HTML filtré.
+ */
+function oli_acr_consent_help_html() {
+	$days = absint( oli_acr_get_setting( 'retention_days' ) );
+	$html = esc_html__( 'You can unsubscribe in every email.', 'oli-abandoned-cart-recovery' );
+	if ( $days > 0 ) {
+		$html .= ' ' . esc_html(
+			sprintf(
+				/* translators: %d: number of days. */
+				_n( 'We keep this data for at most %d day.', 'We keep this data for at most %d days.', $days, 'oli-abandoned-cart-recovery' ),
+				$days
+			)
+		);
+	}
+	$page_id = (int) get_option( 'wp_page_for_privacy_policy' );
+	if ( $page_id > 0 && 'publish' === get_post_status( $page_id ) ) {
+		$html .= ' <a href="' . esc_url( (string) get_permalink( $page_id ) ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Privacy policy', 'oli-abandoned-cart-recovery' ) . '</a>';
+	}
+	/**
+	 * Filtre la ligne d'aide affichée sous la case de consentement (HTML : liens, gras, italique).
+	 *
+	 * @param string $html Ligne d'aide.
+	 */
+	return wp_kses( (string) apply_filters( 'oli_acr_consent_help_html', $html ), oli_acr_consent_allowed_html(), array( 'http', 'https', 'mailto' ) );
 }
 
 /**
@@ -202,6 +304,7 @@ function oli_acr_is_default_consent_text( $text ) {
 		$defaults = array();
 		foreach ( oli_acr_known_locales() as $locale ) {
 			$defaults[] = oli_acr_normalize_text( oli_acr_in_locale( $locale, 'oli_acr_default_consent_text' ) );
+			$defaults[] = oli_acr_normalize_text( oli_acr_in_locale( $locale, 'oli_acr_legacy_default_consent_text' ) );
 		}
 	}
 	return in_array( oli_acr_normalize_text( $text ), $defaults, true );

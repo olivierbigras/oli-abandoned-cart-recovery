@@ -421,10 +421,80 @@ class OLI_ACR_Templates {
 	}
 
 	/**
-	 * Ajoute les textes par défaut, dans chaque langue active, aux modèles par défaut qui ne les ont pas.
+	 * Textes par défaut connus pour une langue : ceux de cette langue (actuels et 1.0.x) et ceux de la langue
+	 * source en_US (actuels et 1.0.x), que les versions 1.1.x écrivaient dans toute langue sans traduction.
 	 *
-	 * Un modèle par défaut non modifié reçoit ses textes dans toutes les langues ; un modèle modifié garde
-	 * ses textes dans la langue de repli (les autres langues suivent l'ordre de priorité de for_locale()).
+	 * @param string $locale Locale.
+	 * @return array<int, array<mixed>> Jeux de modèles par défaut.
+	 */
+	private static function strict_default_sets( $locale ) {
+		static $cache = array();
+		if ( ! isset( $cache[ $locale ] ) ) {
+			$sets = array();
+			foreach ( array_unique( array( $locale, 'en_US' ) ) as $l ) {
+				$sets[] = oli_acr_in_locale( $l, array( __CLASS__, 'default_templates_raw' ) );
+				$sets[] = oli_acr_in_locale( $l, array( __CLASS__, 'legacy_default_templates' ) );
+			}
+			$cache[ $locale ] = $sets;
+		}
+		return $cache[ $locale ];
+	}
+
+	/**
+	 * Vrai si une valeur est STRICTEMENT identique (octet pour octet, sans normalisation des espaces, de la casse
+	 * ni des balises) à un texte par défaut connu de ce champ pour cette langue.
+	 *
+	 * @param string $id     ID du modèle.
+	 * @param string $field  Champ.
+	 * @param string $value  Valeur enregistrée.
+	 * @param string $locale Langue de l'emplacement (texts[locale] ou clé plate de la langue de repli).
+	 * @return bool
+	 */
+	public static function is_known_default( $id, $field, $value, $locale ) {
+		foreach ( self::strict_default_sets( $locale ) as $set ) {
+			if ( isset( $set[ $id ][ $field ] ) && (string) $set[ $id ][ $field ] === (string) $value ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Vrai si tous les champs du courriel (objet, titre, corps, bouton) sont strictement ceux d'un même jeu
+	 * de textes par défaut connu pour cette langue.
+	 *
+	 * @param string       $id     ID du modèle.
+	 * @param array<mixed> $texts  Textes.
+	 * @param string       $locale Langue.
+	 * @return bool
+	 */
+	public static function is_strict_default( $id, $texts, $locale ) {
+		foreach ( self::strict_default_sets( $locale ) as $set ) {
+			if ( ! isset( $set[ $id ] ) ) {
+				continue;
+			}
+			$same = true;
+			foreach ( self::MAIL_FIELDS as $field ) {
+				if ( ! isset( $texts[ $field ] ) || (string) $set[ $id ][ $field ] !== (string) $texts[ $field ] ) {
+					$same = false;
+					break;
+				}
+			}
+			if ( $same ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Ajoute ou réaligne les textes par défaut des modèles restés au défaut, dans chaque langue active
+	 * (migration, ajout d'une langue, changement de langue de repli).
+	 *
+	 * Règle (1.2.0) : une valeur enregistrée n'est remplacée que si elle est STRICTEMENT identique à un texte
+	 * par défaut connu (is_known_default()) ; tout le reste est conservé à l'octet près, y compris la clé
+	 * plate héritée de la 1.0.x et un texte par défaut retouché (espace, majuscule). Une langue absente est
+	 * ajoutée seulement pour un modèle resté au défaut. Idempotente : une 2e exécution ne change rien.
 	 *
 	 * @return bool Vrai si les modèles ont changé.
 	 */
@@ -435,30 +505,58 @@ class OLI_ACR_Templates {
 		}
 		$fallback = OLI_ACR_Lang::fallback_language();
 		$changed  = false;
-		foreach ( $all as $id => $tpl ) {
-			$tpl   = wp_parse_args( $tpl, self::blank() );
+		foreach ( $all as $id => $stored ) {
+			if ( ! is_array( $stored ) ) {
+				continue;
+			}
+			$id    = (string) $id;
+			$tpl   = wp_parse_args( $stored, self::blank() );
 			$texts = is_array( $tpl['texts'] ) ? $tpl['texts'] : array();
 			if ( array() === $texts ) {
+				// Modèle d'avant 1.1.0 : ses textes deviennent ceux de la langue de repli (ajout, rien n'est écrasé).
 				$texts[ $fallback ] = self::pick_texts( $tpl );
-				$changed            = true;
 			}
 			$base = self::base_texts( array_merge( $tpl, array( 'texts' => $texts ) ), $fallback );
-			if ( self::has_default_text( (string) $id, $base ) ) {
+			if ( self::is_strict_default( $id, $base, $fallback ) ) {
 				foreach ( OLI_ACR_Lang::languages() as $locale ) {
 					$defaults = OLI_ACR_Lang::run_in( $locale, array( __CLASS__, 'default_templates_raw' ) );
-					$current  = isset( $texts[ $locale ] ) ? (array) $texts[ $locale ] : array();
-					// Remplit une langue absente, ou remplace des textes par défaut d'une autre langue ou de la 1.0.x.
-					if ( ( array() === $current || self::has_default_text( (string) $id, $current ) ) && isset( $defaults[ $id ] ) ) {
-						$wanted = self::pick_texts( $defaults[ $id ] );
-						if ( $current !== $wanted ) {
-							$texts[ $locale ] = $wanted;
-							$changed          = true;
+					if ( ! isset( $defaults[ $id ] ) ) {
+						continue;
+					}
+					$current = isset( $texts[ $locale ] ) && is_array( $texts[ $locale ] ) ? $texts[ $locale ] : array();
+					if ( array() === $current ) {
+						$texts[ $locale ] = self::pick_texts( $defaults[ $id ] );
+						continue;
+					}
+					if ( ! self::is_strict_default( $id, $current, $locale ) ) {
+						continue;
+					}
+					foreach ( self::TEXT_FIELDS as $field ) {
+						$value = isset( $current[ $field ] ) ? (string) $current[ $field ] : '';
+						if ( '' === $value || self::is_known_default( $id, $field, $value, $locale ) ) {
+							$current[ $field ] = (string) $defaults[ $id ][ $field ];
 						}
 					}
+					$texts[ $locale ] = $current;
 				}
 			}
-			$tpl['texts'] = $texts;
-			$all[ $id ]   = self::mirror_fallback( $tpl );
+			$out = $stored;
+			if ( ! isset( $stored['texts'] ) || $stored['texts'] !== $texts ) {
+				$out['texts'] = $texts;
+			}
+			// Clé plate (compatibilité 1.0.x) : elle suit la langue de repli seulement si elle est vide ou
+			// strictement identique à un texte par défaut connu ; une valeur saisie reste telle quelle.
+			foreach ( self::TEXT_FIELDS as $field ) {
+				$flat = isset( $stored[ $field ] ) ? (string) $stored[ $field ] : '';
+				$want = isset( $texts[ $fallback ][ $field ] ) ? (string) $texts[ $fallback ][ $field ] : '';
+				if ( '' !== $want && $flat !== $want && ( '' === $flat || self::is_known_default( $id, $field, $flat, $fallback ) ) ) {
+					$out[ $field ] = $want;
+				}
+			}
+			if ( $out !== $stored ) {
+				$all[ $id ] = $out;
+				$changed    = true;
+			}
 		}
 		if ( $changed ) {
 			update_option( 'oli_acr_templates', $all, false );

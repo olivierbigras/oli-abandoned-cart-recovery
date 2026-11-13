@@ -243,9 +243,12 @@ class OLI_ACR_Scheduler {
 		}
 		self::$started = time();
 		try {
-			if ( 'yes' === oli_acr_get_setting( 'enabled' ) ) {
+			// 1.2 : à l'arrêt (nouvelle install avant « Activer », ou interrupteur éteint), aucun courriel panier.
+			if ( oli_acr_reminders_on() ) {
 				self::mark_abandoned();
 				self::send_due_carts();
+			} elseif ( oli_acr_capture_on() ) {
+				self::mark_abandoned( false );
 			}
 			if ( 'yes' === oli_acr_get_setting( 'pending_enabled' ) && self::can_continue() ) {
 				self::send_due_orders();
@@ -310,13 +313,20 @@ class OLI_ACR_Scheduler {
 	/**
 	 * Passe les paniers actifs inactifs depuis le délai en « abandonné » (une requête indexée).
 	 *
+	 * @param bool $schedule Planifier la première relance (faux quand les relances sont à l'arrêt).
 	 * @return int Nombre de paniers.
 	 */
-	public static function mark_abandoned() {
+	public static function mark_abandoned( $schedule = true ) {
 		global $wpdb;
 		$table  = oli_acr_table( 'carts' );
 		$cutoff = oli_acr_now( -1 * oli_acr_duration_to_seconds( oli_acr_get_setting( 'abandon_after' ) ) );
 		$now    = oli_acr_now();
+		if ( ! $schedule ) {
+			// Relances à l'arrêt (1.2) : le panier devient « abandonné » (statistiques, vue À relancer) sans
+			// relance planifiée, pour qu'aucun vieux panier ne soit relancé au moment d'activer les relances.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Nom de table construit par oli_acr_table(), jamais une saisie.
+			return (int) $wpdb->query( $wpdb->prepare( "UPDATE {$table} SET status = 'abandoned', abandoned_at = %s, next_send_at = NULL WHERE status = 'open' AND updated_at <= %s AND item_count > 0 AND order_id = 0 AND email <> '' LIMIT 500", $now, $cutoff ) );
+		}
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Nom de table construit par oli_acr_table() ou $wpdb->prefix avec un suffixe fixe, jamais une saisie.
 		return (int) $wpdb->query( $wpdb->prepare( "UPDATE {$table} SET status = 'abandoned', abandoned_at = %s, next_send_at = %s WHERE status = 'open' AND updated_at <= %s AND item_count > 0 AND order_id = 0 AND email <> '' LIMIT 500", $now, $now, $cutoff ) );
 	}
