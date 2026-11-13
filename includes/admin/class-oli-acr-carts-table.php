@@ -147,7 +147,7 @@ class OLI_ACR_Carts_Table extends WP_List_Table {
 		if ( 'all' !== $view ) {
 			$args['view'] = $view;
 		}
-		$out  = '<a class="row-title" href="' . esc_url( OLI_ACR_Admin::url( 'carts', $args ) ) . '">' . esc_html( $item->email ) . '</a>';
+		$out  = '<a class="row-title oli-acr-email" href="' . esc_url( OLI_ACR_Admin::url( 'carts', $args ) ) . '">' . esc_html( $item->email ) . '</a>';
 		$name = trim( $item->first_name . ' ' . $item->last_name );
 		if ( $name ) {
 			$out .= '<br>' . esc_html( $name );

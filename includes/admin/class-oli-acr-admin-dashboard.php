@@ -186,7 +186,7 @@ class OLI_ACR_Admin_Dashboard {
 			echo '<p class="oli-acr-card-body">' . esc_html__( 'No cart to follow up right now.', 'oli-abandoned-cart-recovery' ) . '</p></div>';
 			return;
 		}
-		echo '<table class="widefat striped oli-acr-mini"><thead><tr><th scope="col">' . esc_html__( 'Customer', 'oli-abandoned-cart-recovery' ) . '</th><th scope="col">' . esc_html__( 'Items', 'oli-abandoned-cart-recovery' ) . '</th><th scope="col">' . esc_html__( 'Total', 'oli-abandoned-cart-recovery' ) . '</th><th scope="col">' . esc_html__( 'Status', 'oli-abandoned-cart-recovery' ) . '</th></tr></thead><tbody>';
+		echo '<div class="oli-acr-scroll"><table class="widefat striped oli-acr-mini"><thead><tr><th scope="col">' . esc_html__( 'Customer', 'oli-abandoned-cart-recovery' ) . '</th><th scope="col">' . esc_html__( 'Items', 'oli-abandoned-cart-recovery' ) . '</th><th scope="col">' . esc_html__( 'Total', 'oli-abandoned-cart-recovery' ) . '</th><th scope="col">' . esc_html__( 'Status', 'oli-abandoned-cart-recovery' ) . '</th></tr></thead><tbody>';
 		foreach ( $rows as $row ) {
 			$name = trim( $row->first_name . ' ' . $row->last_name );
 			printf(
@@ -199,7 +199,7 @@ class OLI_ACR_Admin_Dashboard {
 				OLI_ACR_Admin_Carts::status_pill( (string) $row->status ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Échappé dans status_pill().
 			);
 		}
-		echo '</tbody></table></div>';
+		echo '</tbody></table></div></div>';
 	}
 
 	/**

@@ -33,9 +33,9 @@ class OLI_ACR_Admin_Carts {
 		$views = array(
 			'all'          => array( __( 'All', 'oli-abandoned-cart-recovery' ), array() ),
 			'todo'         => array( __( 'To follow up', 'oli-abandoned-cart-recovery' ), array( 'abandoned', 'failed' ) ),
-			'reminded'     => array( __( 'Reminded', 'oli-abandoned-cart-recovery' ), array( 'reminded' ) ),
-			'recovered'    => array( __( 'Recovered', 'oli-abandoned-cart-recovery' ), array( 'recovered' ) ),
-			'unsubscribed' => array( __( 'Unsubscribed', 'oli-abandoned-cart-recovery' ), array( 'unsubscribed' ) ),
+			'reminded'     => array( _x( 'Reminded', 'carts view (plural)', 'oli-abandoned-cart-recovery' ), array( 'reminded' ) ),
+			'recovered'    => array( _x( 'Recovered', 'carts view (plural)', 'oli-abandoned-cart-recovery' ), array( 'recovered' ) ),
+			'unsubscribed' => array( _x( 'Unsubscribed', 'carts view (plural)', 'oli-abandoned-cart-recovery' ), array( 'unsubscribed' ) ),
 		);
 		if ( 'yes' === oli_acr_get_setting( 'pending_enabled' ) ) {
 			$views['pending'] = array( __( 'Pending orders', 'oli-abandoned-cart-recovery' ), array() );

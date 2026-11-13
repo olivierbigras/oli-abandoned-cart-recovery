@@ -168,8 +168,23 @@ class OLI_ACR_Admin {
 		if ( is_string( $hook ) && '' !== $hook ) {
 			self::$hook = $hook;
 			// Redirections et actions groupées traitées avant tout affichage.
+			add_action( 'load-' . $hook, array( __CLASS__, 'deny_settings_early' ) );
 			add_action( 'load-' . $hook, array( __CLASS__, 'maybe_redirect_legacy' ) );
 			add_action( 'load-' . $hook, array( 'OLI_ACR_Admin_Carts', 'maybe_bulk_delete' ) );
+		}
+	}
+
+	/**
+	 * Réglages refusés (403) à qui n'a pas la capacité des Réglages, avant tout affichage.
+	 *
+	 * @return void
+	 */
+	public static function deny_settings_early() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Lecture seule : choix de l'écran.
+		$screen = isset( $_GET['screen'] ) ? sanitize_key( wp_unslash( $_GET['screen'] ) ) : '';
+		if ( 'settings' === $screen && ! self::can_settings() ) {
+			// D7 : réponse 403 complète avant tout affichage (pas un message dans la page).
+			self::check_cap( true );
 		}
 	}
 
@@ -631,11 +646,11 @@ class OLI_ACR_Admin {
 			return;
 		}
 		if ( get_option( 'oli_acr_notice_update' ) && ! self::user_dismissed( 'update_120' ) ) {
+			// Le lien vers Réglages n'est montré qu'aux personnes qui peuvent l'ouvrir (D7).
 			printf(
-				'<div class="notice notice-info is-dismissible oli-acr-update-notice" data-oli-acr-notice="update_120"><p>%1$s <a href="%2$s">%3$s</a></p></div>',
+				'<div class="notice notice-info is-dismissible oli-acr-update-notice" data-oli-acr-notice="update_120"><p>%1$s%2$s</p></div>',
 				esc_html__( 'New interface: your settings and recovery emails have been kept.', 'oli-abandoned-cart-recovery' ),
-				esc_url( self::can_settings() ? self::url( 'settings' ) : self::url( 'dashboard' ) ),
-				esc_html__( 'View settings', 'oli-abandoned-cart-recovery' )
+				self::can_settings() ? ' <a href="' . esc_url( self::url( 'settings' ) ) . '">' . esc_html__( 'View settings', 'oli-abandoned-cart-recovery' ) . '</a>' : '' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Lien échappé ci-contre.
 			);
 		}
 		if ( 'always' === oli_acr_get_setting( 'guest_tracking' ) ) {

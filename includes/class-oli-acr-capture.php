@@ -95,7 +95,6 @@ class OLI_ACR_Capture {
 			'required' => false,
 			'class'    => array( 'form-row-wide', 'oli-acr-consent-row' ),
 			'priority' => 115,
-			'custom_attributes' => array( 'aria-describedby' => 'oli-acr-consent-help' ),
 		);
 		return $fields;
 	}
@@ -112,7 +111,9 @@ class OLI_ACR_Capture {
 		if ( 'oli_acr_consent' !== $key || ! is_string( $field ) ) {
 			return $field;
 		}
-		$field = (string) preg_replace( '#\s*<span class="optional">.*?</span>#s', '', $field );
+		$field = (string) preg_replace( '#(?:&nbsp;)?\s*<span class="optional">.*?</span>#s', '', $field );
+		$field = (string) preg_replace( '#&nbsp;\s*</label>#', '</label>', $field );
+		$field = (string) preg_replace( '#<input type="checkbox"#', '<input type="checkbox" aria-describedby="oli-acr-consent-help"', $field, 1 );
 		$help  = '<span class="oli-acr-consent-help" id="oli-acr-consent-help">' . oli_acr_consent_help_html() . '</span>';
 		$pos   = strrpos( $field, '</p>' );
 		return false === $pos ? $field . $help : substr_replace( $field, $help . '</p>', $pos, 4 );
