@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.0
+
+J'ai refait l'interface d'administration pour qu'elle tienne en quatre écrans et qu'un premier réglage se fasse sans se tromper :
+
+* J'ai regroupé l'admin sous un seul sous-menu WooCommerce, « Récupération de paniers », avec quatre écrans : Tableau de bord, Paniers, Courriels, Réglages. Les anciennes adresses à onglets redirigent vers l'écran ou la vue équivalente.
+* J'ai ajouté un assistant en 4 étapes pour les nouvelles installations (consentement, séquence, expéditeur et test, activation). Les relances restent à l'arrêt tant qu'on ne clique pas « Activer les relances » ; les paniers consentis peuvent être enregistrés entre-temps, sans jamais être relancés automatiquement.
+* Pour une nouvelle installation, j'ai mis la conservation à 90 jours (les paniers non récupérés restent supprimés après 30 jours) et j'ai laissé la relance 2 avec coupon et l'accès des gestionnaires de boutique désactivés.
+* Pour une mise à jour depuis une 1.1.x, je garde tout tel quel (réglages, modèles, paniers, journal, relances actives), je n'affiche pas l'assistant et je montre un seul avis fermable sur les écrans du plugin.
+* J'ai refait le tableau de bord (4 tuiles avec leur définition, état vide, paniers à relancer, derniers récupérés), la liste des paniers (vues, actions toujours visibles, panneau avec frise), la séquence de courriels (cartes, interrupteur, aperçu rendu avec des données d'exemple) et les réglages (résumé en 4 lignes, avancé enregistré section par section).
+* J'ai ajouté un bandeau de statut (actif, à l'arrêt, envoi bloqué) sur le Tableau de bord et les Réglages, et je n'affiche plus la demande de don qu'une fois, sur les Réglages.
+* À la caisse, j'ai changé le libellé de la case, retiré la mention « (facultatif) » et ajouté une ligne d'aide (désinscription, durée de conservation, lien vers la politique de confidentialité).
+* J'affiche les onglets de langue seulement sur un site multilingue, sans code de locale.
+* J'ai travaillé l'accessibilité (noms accessibles, écrans sans défilement horizontal jusqu'à 390 px, couleurs qui suivent le schéma de l'admin).
+
 ## 2026-10-23
 
 * composer.json : nom du paquet renommé de bigrat95/ en olivierbigras/
