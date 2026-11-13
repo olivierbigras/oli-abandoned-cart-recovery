@@ -191,7 +191,7 @@ class OLI_ACR_Lang {
 	public static function label( $locale ) {
 		static $names = null;
 		if ( null === $names ) {
-			$names = array( 'en_US' => 'English (United States)' );
+			$names = array( 'en_US' => 'English' );
 			if ( ! function_exists( 'wp_get_available_translations' ) && file_exists( ABSPATH . 'wp-admin/includes/translation-install.php' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/translation-install.php';
 			}
@@ -208,7 +208,34 @@ class OLI_ACR_Lang {
 				'fr_FR' => 'Français',
 			);
 		}
-		return isset( $names[ $locale ] ) ? $names[ $locale ] . ' (' . $locale . ')' : $locale;
+		// D4 (1.2) : nom de la langue seulement, sans code de locale dans le libellé visible (le code reste dans lang="").
+		return isset( $names[ $locale ] ) ? $names[ $locale ] : $locale;
+	}
+
+	/**
+	 * Indique si le site est vraiment multilingue (D4) : extension multilingue active avec au moins deux
+	 * langues. Sur un site WordPress seul, les langues installées ne comptent pas (aucun onglet en_US forcé).
+	 *
+	 * @return bool
+	 */
+	public static function is_multilingual() {
+		$multi = 'core' !== self::adapter()->id() && count( self::languages() ) > 1;
+		/**
+		 * Filtre : vrai si l'interface doit proposer une version des textes par langue.
+		 *
+		 * @param bool $multi Détection automatique.
+		 */
+		return (bool) apply_filters( 'oli_acr_is_multilingual', $multi );
+	}
+
+	/**
+	 * Langues proposées dans l'interface (onglets, éditeurs) : toutes les langues actives sur un site
+	 * multilingue, sinon la seule langue du site (les envois gardent leur logique de langue habituelle).
+	 *
+	 * @return array<int, string>
+	 */
+	public static function ui_languages() {
+		return self::is_multilingual() ? self::languages() : array( self::fallback_language() );
 	}
 
 	/**

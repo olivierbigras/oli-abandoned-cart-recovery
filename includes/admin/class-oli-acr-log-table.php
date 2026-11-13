@@ -38,13 +38,11 @@ class OLI_ACR_Log_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'sent_at'      => __( 'Sent', 'oli-abandoned-cart-recovery' ),
-			'email'        => __( 'Email', 'oli-abandoned-cart-recovery' ),
-			'template_id'  => __( 'Template', 'oli-abandoned-cart-recovery' ),
-			'object_type'  => __( 'Type', 'oli-abandoned-cart-recovery' ),
-			'coupon_code'  => __( 'Coupon', 'oli-abandoned-cart-recovery' ),
-			'clicked_at'   => __( 'Clicked', 'oli-abandoned-cart-recovery' ),
-			'recovered_at' => __( 'Recovered', 'oli-abandoned-cart-recovery' ),
+			'sent_at'     => __( 'Date', 'oli-abandoned-cart-recovery' ),
+			'email'       => __( 'Recipient', 'oli-abandoned-cart-recovery' ),
+			'template_id' => __( 'Reminder', 'oli-abandoned-cart-recovery' ),
+			'result'      => __( 'Result', 'oli-abandoned-cart-recovery' ),
+			'object_id'   => __( 'Cart', 'oli-abandoned-cart-recovery' ),
 		);
 	}
 
@@ -81,21 +79,27 @@ class OLI_ACR_Log_Table extends WP_List_Table {
 	protected function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'sent_at':
-			case 'clicked_at':
-				return oli_acr_admin_date( $item->$column_name );
-			case 'recovered_at':
-				if ( empty( $item->recovered_at ) ) {
-					return '—';
-				}
-				return oli_acr_admin_date( $item->recovered_at ) . '<br>' . wp_kses_post( wc_price( (float) $item->recovered_total ) );
+				return OLI_ACR_Admin::relative_date( (string) $item->sent_at );
 			case 'email':
 				return esc_html( $item->email );
 			case 'template_id':
-				return esc_html( OLI_ACR_Admin::template_name( (string) $item->template_id ) );
-			case 'object_type':
-				return 'order' === $item->object_type ? esc_html__( 'Pending order', 'oli-abandoned-cart-recovery' ) : esc_html__( 'Abandoned cart', 'oli-abandoned-cart-recovery' );
-			case 'coupon_code':
-				return $item->coupon_code ? '<code>' . esc_html( $item->coupon_code ) . '</code>' : '—';
+				$name = OLI_ACR_Admin::template_name( (string) $item->template_id );
+				return esc_html( $name ) . ( $item->coupon_code ? '<br><small>' . esc_html__( 'Coupon:', 'oli-abandoned-cart-recovery' ) . ' <code>' . esc_html( $item->coupon_code ) . '</code></small>' : '' );
+			case 'result':
+				if ( ! empty( $item->recovered_at ) ) {
+					return '<span class="oli-acr-pill oli-acr-pill-recovered">' . esc_html__( 'Recovered', 'oli-abandoned-cart-recovery' ) . '</span> ' . wp_kses_post( wc_price( (float) $item->recovered_total ) );
+				}
+				if ( ! empty( $item->clicked_at ) ) {
+					return '<span class="oli-acr-pill oli-acr-pill-reminded">' . esc_html__( 'Clicked', 'oli-abandoned-cart-recovery' ) . '</span>';
+				}
+				return '<span class="oli-acr-pill oli-acr-pill-open">' . esc_html__( 'Sent', 'oli-abandoned-cart-recovery' ) . '</span>';
+			case 'object_id':
+				if ( 'order' === $item->object_type ) {
+					$order = wc_get_order( (int) $item->object_id );
+					/* translators: %s: order number. */
+					return $order ? '<a href="' . esc_url( $order->get_edit_order_url() ) . '">' . esc_html( sprintf( __( 'Order #%s', 'oli-abandoned-cart-recovery' ), $order->get_order_number() ) ) . '</a>' : '—';
+				}
+				return OLI_ACR_Carts::get( (int) $item->object_id ) ? '<a href="' . esc_url( OLI_ACR_Admin::url( 'carts', array( 'cart' => (int) $item->object_id ) ) ) . '">' . esc_html__( 'View cart', 'oli-abandoned-cart-recovery' ) . '</a>' : '—';
 		}
 		return '';
 	}

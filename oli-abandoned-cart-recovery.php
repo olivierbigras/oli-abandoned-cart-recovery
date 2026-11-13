@@ -3,7 +3,7 @@
  * Plugin Name: Oli Abandoned Cart Recovery
  * Plugin URI: https://github.com/olivierbigras/oli-abandoned-cart-recovery
  * Description: Lightweight abandoned cart and pending order recovery for WooCommerce. Captures the checkout email as soon as it is typed (classic and block checkout), sends a sequence of reminder emails with unique coupons, and tracks recovered sales.
- * Version: 1.1.7
+ * Version: 1.2.0
  * Requires at least: 6.4
  * Requires PHP: 7.4
  * Requires Plugins: woocommerce
@@ -23,7 +23,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'OLI_ACR_VERSION', '1.1.7' );
+define( 'OLI_ACR_VERSION', '1.2.0' );
 define( 'OLI_ACR_DB_VERSION', '1.1.0' );
 define( 'OLI_ACR_FILE', __FILE__ );
 define( 'OLI_ACR_DIR', plugin_dir_path( __FILE__ ) );

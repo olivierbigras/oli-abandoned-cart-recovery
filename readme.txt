@@ -5,7 +5,7 @@ Tags: abandoned cart, woocommerce, cart recovery, pending orders, multilingual
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.7
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 

@@ -351,6 +351,78 @@ class OLI_ACR_Mailer {
 	 * @return bool
 	 */
 	public static function deliver_template( $tpl, $context ) {
+		$message = self::build_message( $tpl, $context );
+		return self::deliver( $message['to'], $message['subject'], $message['heading'], $message['body'], $message['reply_to'], $message['unsub'] );
+	}
+
+	/**
+	 * Aperçu d'un modèle avec des données neutres (éditeur de l'admin, 1.2) : rien n'est envoyé ni enregistré.
+	 *
+	 * @param array<mixed> $tpl    Modèle (non résolu).
+	 * @param string       $locale Langue.
+	 * @return array{subject: string, html: string}
+	 */
+	public static function preview( $tpl, $locale = '' ) {
+		$locale = '' !== $locale ? OLI_ACR_Lang::resolve( $locale ) : OLI_ACR_Lang::admin_language();
+		return (array) OLI_ACR_Lang::run_in( $locale, array( __CLASS__, 'preview_now' ), $tpl, $locale );
+	}
+
+	/**
+	 * Aperçu dans la langue courante.
+	 *
+	 * @param array<mixed> $tpl    Modèle.
+	 * @param string       $locale Langue.
+	 * @return array{subject: string, html: string}
+	 */
+	public static function preview_now( $tpl, $locale ) {
+		$tpl     = ! empty( $tpl['id'] ) ? OLI_ACR_Templates::for_locale( (string) $tpl['id'], $tpl, $locale ) : $tpl;
+		$items   = array(
+			array(
+				'product_id'   => 0,
+				'variation_id' => 0,
+				'quantity'     => 1,
+				'name'         => __( 'Stoneware mug', 'oli-abandoned-cart-recovery' ),
+				'line_total'   => 28,
+			),
+			array(
+				'product_id'   => 0,
+				'variation_id' => 0,
+				'quantity'     => 2,
+				'name'         => __( 'Scented candle', 'oli-abandoned-cart-recovery' ),
+				'line_total'   => 36,
+			),
+		);
+		$message = self::build_message(
+			$tpl,
+			array(
+				'first_name'   => __( 'Marie', 'oli-abandoned-cart-recovery' ),
+				'last_name'    => __( 'Tremblay', 'oli-abandoned-cart-recovery' ),
+				'email'        => 'marie@example.com',
+				'items'        => $items,
+				'total'        => 64,
+				'currency'     => get_woocommerce_currency(),
+				'link'         => '#',
+				'coupon'       => 'yes' === $tpl['coupon_enabled'] ? 'DEMO-10' : '',
+				'order_number' => '1234',
+				'order_date'   => wc_format_datetime( new WC_DateTime() ),
+				'test'         => true,
+				'locale'       => $locale,
+			)
+		);
+		return array(
+			'subject' => $message['subject'],
+			'html'    => WC()->mailer()->wrap_message( $message['heading'], $message['body'] ),
+		);
+	}
+
+	/**
+	 * Construit un courriel (balises remplacées) sans l'envoyer.
+	 *
+	 * @param array<mixed> $tpl     Modèle.
+	 * @param array<mixed> $context Contexte.
+	 * @return array{to: string, subject: string, heading: string, body: string, reply_to: string, unsub: string}
+	 */
+	public static function build_message( $tpl, $context ) {
 		$context = wp_parse_args(
 			$context,
 			array(
@@ -425,7 +497,14 @@ class OLI_ACR_Mailer {
 		) . '</p>';
 
 		$reply_to = '' !== $tpl['reply_to'] ? $tpl['reply_to'] : oli_acr_get_setting( 'reply_to' );
-		return self::deliver( $context['email'], $subject, $heading, $body, $reply_to, $context['test'] ? '' : $unsub );
+		return array(
+			'to'       => (string) $context['email'],
+			'subject'  => (string) $subject,
+			'heading'  => (string) $heading,
+			'body'     => (string) $body,
+			'reply_to' => (string) $reply_to,
+			'unsub'    => $context['test'] ? '' : (string) $unsub,
+		);
 	}
 
 	/**

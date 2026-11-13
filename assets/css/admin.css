@@ -1,24 +1,79 @@
-/* Oli Abandoned Cart Recovery : styles d'admin, chargés sur les écrans du plugin seulement et limités à .oli-acr-wrap. */
-.oli-acr-wrap .oli-acr-title { display: flex; align-items: center; gap: 10px; }
-.oli-acr-wrap .oli-acr-title img { border-radius: 6px; }
-.oli-acr-wrap .oli-acr-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0 24px; }
-.oli-acr-wrap .oli-acr-card { background: #fff; border: 1px solid #dcdcde; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; }
-.oli-acr-wrap .oli-acr-card-value { font-size: 26px; font-weight: 600; color: #1d2327; line-height: 1.2; }
-.oli-acr-wrap .oli-acr-card-label { color: #646970; margin-top: 4px; }
-.oli-acr-wrap .oli-acr-status { display: inline-block; padding: 2px 8px; border-radius: 3px; background: #f0f0f1; color: #50575e; }
-.oli-acr-wrap .oli-acr-status-open { background: #e5f0fa; color: #135e96; }
-.oli-acr-wrap .oli-acr-status-abandoned { background: #fcf0e3; color: #8a4b0f; }
-.oli-acr-wrap .oli-acr-status-reminded { background: #f8e8f8; color: #6b2d6b; }
-.oli-acr-wrap .oli-acr-status-recovered { background: #e6f4ea; color: #1e6b34; }
-.oli-acr-wrap .oli-acr-status-unsubscribed { background: #fbeaea; color: #8a1f1f; }
-.oli-acr-wrap .oli-acr-placeholders { columns: 2; margin-top: 4px; }
-.oli-acr-wrap .oli-acr-role { display: inline-block; margin: 4px 12px 0 0; }
-.oli-acr-wrap .oli-acr-periods { float: none; margin: 12px 0 0; }
-.oli-acr-wrap .oli-acr-test { margin-bottom: 24px; }
-.oli-acr-wrap .oli-acr-donate-footer { margin-top: 20px; }
-.oli-acr-wrap .oli-acr-coupon-missing { color: #b32d2e; }
-/* Colonne Client : l'adresse courriel ne se coupe jamais au milieu (B7). */
-.oli-acr-wrap .wp-list-table .column-email { width: 24%; min-width: 220px; }
-.oli-acr-wrap .wp-list-table td.column-email strong.oli-acr-email,
-.oli-acr-wrap .wp-list-table td.column-email .oli-acr-email { white-space: nowrap; word-break: keep-all; overflow-wrap: normal; }
-@media screen and (max-width: 782px) { .oli-acr-wrap .wp-list-table td.column-email .oli-acr-email { white-space: normal; overflow-wrap: anywhere; } }
+/* Oli Abandoned Cart Recovery 1.2 : styles d'admin, écrans du plugin seulement, classes préfixées oli-acr- (les classes du cœur restent limitées à .oli-acr-wrap).
+   Aucune couleur d'action en dur : var(--wp-admin-theme-color) et classes du cœur. Les couleurs d'état
+   (vert, ambre, rouge) reprennent les jetons des avis WordPress. */
+.oli-acr-wrap{--o-ok:#00a32a;--o-warn:#dba617;--o-err:#d63638;--o-line:#c3c4c7;--o-mute:#50575e;--o-accent:var(--wp-admin-theme-color,#2271b1)}
+.oli-acr-nav{margin-bottom:16px}
+.oli-acr-card{background:#fff;border:1px solid var(--o-line);margin:0 0 16px;box-sizing:border-box}
+.oli-acr-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;border-bottom:1px solid #f0f0f1}
+.oli-acr-card-head h2{margin:0;font-size:14px}
+.oli-acr-card-body{padding:12px 16px}
+.oli-acr-card-foot{padding:12px 16px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.oli-acr-banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;background:#fff;border:1px solid var(--o-line);border-left:4px solid var(--o-ok);padding:8px 12px;margin:0 0 16px}
+.oli-acr-banner-off{border-left-color:var(--o-warn)}
+.oli-acr-banner-mail{border-left-color:var(--o-err)}
+.oli-acr-banner-text{margin:4px 0;flex:1 1 320px}
+.oli-acr-banner-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.oli-acr-banner form{margin:0}
+.oli-acr-periods{float:none;margin:0 0 8px}
+.oli-acr-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:8px 0 16px}
+.oli-acr-tile{background:#fff;border:1px solid var(--o-line);padding:12px 16px}
+.oli-acr-tile-title{font-size:13px;font-weight:400;margin:0;color:#1d2327}
+.oli-acr-tile-value{font-size:26px;line-height:1.3;margin:4px 0;color:#1d2327}
+.oli-acr-tile-help{margin:0;color:var(--o-mute)}
+.oli-acr-columns{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px}
+.oli-acr-empty{padding:16px}
+.oli-acr-reports summary,.oli-acr-advanced>summary{cursor:pointer;padding:12px 16px;font-weight:600}
+.oli-acr-advanced>summary h2{display:inline;font-size:14px;margin:0}
+.oli-acr-scroll{max-width:100%;overflow-x:auto}
+.oli-acr-pill{display:inline-block;padding:1px 8px;border-radius:10px;background:#f0f0f1;color:#1d2327;white-space:nowrap}
+.oli-acr-pill-abandoned{background:#fcf9e8}
+.oli-acr-pill-reminded,.oli-acr-pill-open{background:#f0f6fc}
+.oli-acr-pill-recovered{background:#edfaef}
+.oli-acr-pill-failed,.oli-acr-pill-unsubscribed{background:#fcf0f1}
+.oli-acr-carts.has-panel{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.oli-acr-carts-list .subsubsub{margin-top:0}
+.oli-acr-legend{clear:both}
+.oli-acr-wrap .row-actions{left:0;position:static}
+.oli-acr-panel-items{margin:8px 0;padding-left:18px;list-style:disc}
+.oli-acr-timeline{list-style:none;margin:12px 0;padding:0 0 0 18px;border-left:2px solid var(--o-line)}
+.oli-acr-timeline li{position:relative;margin:0 0 12px}
+.oli-acr-timeline li:before{content:"";position:absolute;left:-25px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--o-accent)}
+.oli-acr-timeline li.is-next:before{background:#dcdcde}
+.oli-acr-panel-close{text-decoration:none}
+.oli-acr-delete{color:#b32d2e}
+.oli-acr-sequence{list-style:none;margin:16px 0;padding:0;max-width:860px}
+.oli-acr-step{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--o-line);padding:12px 16px;margin:0 0 12px}
+.oli-acr-step-num{flex:0 0 28px;height:28px;border-radius:50%;background:#f0f0f1;color:#1d2327;display:flex;align-items:center;justify-content:center;font-weight:600}
+.oli-acr-step.is-active .oli-acr-step-num{background:var(--o-accent);color:#fff}
+.oli-acr-step-body{flex:1;min-width:0}
+.oli-acr-step-body h3{margin:2px 0 4px;font-size:14px}
+.oli-acr-step-body p{margin:2px 0;color:var(--o-mute)}
+.oli-acr-step-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.oli-acr-step-actions form{margin:0}
+.oli-acr-switch{display:inline-flex;align-items:center;gap:6px}
+.oli-acr-switch-track{width:28px;height:14px;border-radius:7px;background:#8c8f94;position:relative}
+.oli-acr-switch-track:after{content:"";position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#fff}
+.oli-acr-switch[aria-checked=true] .oli-acr-switch-track{background:var(--o-accent)}
+.oli-acr-switch[aria-checked=true] .oli-acr-switch-track:after{left:16px}
+.oli-acr-editor{display:grid;grid-template-columns:minmax(0,3fr) minmax(280px,2fr);gap:24px;align-items:start}
+.oli-acr-preview-subject{padding:8px 16px 0;margin:0}
+.oli-acr-preview-frame{display:block;width:100%;height:560px;border:0;border-top:1px solid #f0f0f1;margin-top:8px}
+.oli-acr-preview-note{padding:0 16px 12px}
+.oli-acr-insert .button-link{margin:0 6px 0 0}
+.oli-acr-placeholders ul{columns:2}
+.oli-acr-coupon-missing{color:#b32d2e}
+.oli-acr-summary{max-width:860px;margin-bottom:16px}
+.oli-acr-summary th{width:160px;font-weight:600}
+.oli-acr-summary-edit{text-align:right;width:90px}
+.oli-acr-anchors ul{display:flex;flex-wrap:wrap;gap:4px 16px;margin:0;padding:8px 16px;border-top:1px solid #f0f0f1;border-bottom:1px solid #f0f0f1}
+.oli-acr-section{padding:4px 16px 8px;border-bottom:1px solid #f0f0f1;scroll-margin-top:40px}
+.oli-acr-role{display:inline-block;margin:4px 12px 0 0}
+.oli-acr-test{margin-bottom:16px}
+.oli-acr-steps{display:flex;flex-wrap:wrap;gap:4px 16px;list-style:none;margin:8px 0 16px;padding:0;color:var(--o-mute)}
+.oli-acr-steps .is-current{font-weight:600;color:#1d2327}
+.oli-acr-wizard .oli-acr-wizard-card{max-width:760px}
+.oli-acr-bullets{list-style:disc;padding-left:18px}
+.oli-acr-inline-field{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+@media screen and (max-width:1100px){.oli-acr-carts.has-panel{display:flex;flex-direction:column-reverse}.oli-acr-carts.has-panel .oli-acr-panel{width:100%}}
+@media screen and (max-width:960px){.oli-acr-columns,.oli-acr-editor{grid-template-columns:minmax(0,1fr)}}
+@media screen and (max-width:782px){.oli-acr-step{flex-wrap:wrap}.oli-acr-step-actions{width:100%}.oli-acr-summary th,.oli-acr-summary td{display:block;width:auto;text-align:left}.oli-acr-wrap .button,.oli-acr-switch{min-height:44px}.oli-acr-wrap .nav-tab{margin-bottom:4px}.oli-acr-wrap .wp-list-table td.column-email{overflow-wrap:anywhere}.oli-acr-preview-frame{height:480px}}

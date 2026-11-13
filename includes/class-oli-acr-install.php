@@ -40,11 +40,18 @@ class OLI_ACR_Install {
 		// Sans WooCommerce (WordPress 6.4 n'applique pas l'en-tête Requires Plugins), l'activation reste
 		// sans erreur : rien ici n'utilise WooCommerce, le plugin attend WooCommerce et affiche un avis
 		// sur l'écran des extensions. Aucune requête HTTP externe et aucune sortie à l'activation.
+		// 1.2 (§8.1) : une installation est NOUVELLE seulement si oli_acr_settings est absente AVANT l'activation.
+		// Sinon (1.1.x ou toute version < 1.2, réactivation, données gardées), c'est une mise à jour : rien ne change.
+		$is_new = false === get_option( 'oli_acr_settings' );
 		self::create_tables();
-		self::add_caps();
-		if ( false === get_option( 'oli_acr_settings' ) ) {
-			add_option( 'oli_acr_settings', oli_acr_default_settings(), '', true );
+		if ( $is_new ) {
+			add_option( 'oli_acr_settings', oli_acr_new_install_settings(), '', true );
+			if ( false === get_option( 'oli_acr_setup' ) ) {
+				add_option( 'oli_acr_setup', 'pending', '', true );
+			}
 		}
+		self::add_caps();
+		self::maybe_mark_existing_install();
 		if ( false === get_option( 'oli_acr_templates' ) ) {
 			add_option( 'oli_acr_templates', OLI_ACR_Templates::default_templates(), '', false );
 		}
@@ -54,6 +61,33 @@ class OLI_ACR_Install {
 		self::migrate();
 		// La planification est (re)créée au prochain chargement.
 		delete_option( 'oli_acr_schedule_signature' );
+	}
+
+	/**
+	 * Installation existante (toute version < 1.2) : l'assistant n'est pas repassé, les relances, les modèles
+	 * et la durée de conservation restent tels quels (CA-ACR-31). Les nouveaux réglages reçoivent des valeurs
+	 * qui ne changent rien au comportement, et un avis unique et fermable annonce la nouvelle interface.
+	 * Sans effet si oli_acr_setup existe déjà (nouvelle install en cours d'assistant, ou déjà migrée).
+	 *
+	 * @return void
+	 */
+	public static function maybe_mark_existing_install() {
+		if ( false !== get_option( 'oli_acr_setup' ) ) {
+			return;
+		}
+		$settings = get_option( 'oli_acr_settings' );
+		if ( ! is_array( $settings ) ) {
+			return;
+		}
+		if ( ! isset( $settings['capture_while_off'] ) ) {
+			// Comportement 1.1.x conservé : relances éteintes = aucune capture.
+			$settings['capture_while_off'] = 'no';
+			update_option( 'oli_acr_settings', $settings, true );
+		}
+		add_option( 'oli_acr_setup', 'done', '', true );
+		if ( false === get_option( 'oli_acr_notice_update' ) ) {
+			add_option( 'oli_acr_notice_update', time(), '', false );
+		}
 	}
 
 	/**
@@ -72,6 +106,15 @@ class OLI_ACR_Install {
 	 * @return void
 	 */
 	public static function maybe_upgrade() {
+		// Mise à jour sans activation (remplacement des fichiers) : oli_acr_setup n'existe pas encore.
+		if ( false === get_option( 'oli_acr_setup' ) ) {
+			if ( false === get_option( 'oli_acr_settings' ) ) {
+				// Extension chargée sans le crochet d'activation (ex. copie manuelle) : nouvelle installation.
+				self::activate();
+			} else {
+				self::maybe_mark_existing_install();
+			}
+		}
 		if ( get_option( 'oli_acr_db_version' ) !== OLI_ACR_DB_VERSION ) {
 			self::create_tables();
 			self::add_caps();
