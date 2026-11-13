@@ -228,6 +228,7 @@ When Polylang is active without Polylang for WooCommerce, a dismissible admin no
 * New installs: a 4-step setup assistant (consent, sequence, sender and test, turn on); recovery emails stay off until you click "Turn on recovery emails", and carts can be saved with consent meanwhile without ever being reminded automatically
 * New installs: data kept 90 days by default (unrecovered carts still deleted after 30 days); the second email (with coupon) and shop manager access stay off by default
 * Updates from 1.1.x keep every setting, email, cart and log entry as they are, never show the assistant, and show one dismissible notice on the plugin's screens
+* Updates never overwrite an email text you wrote: only a subject, body, heading or button text that is byte-for-byte identical to a former default text can be replaced by the current default (for example the English defaults written by 1.1.x on a French site); everything else, including texts in French and defaults you retouched by a single space or capital, is kept exactly as is, and running the update twice changes nothing
 * Dashboard: four tiles, each with a written definition, an empty state with a link to checkout, carts to follow up and latest recovered carts; the email report is folded
 * Carts: views instead of status tabs, actions always visible (not only on hover), a cart panel with the items and a timeline; pending orders appear as a Carts view only when the feature is on
 * Emails: the sequence as cards ordered by delay with an on/off switch, subject and preview; the editor shows a preview rendered with sample data; the log is a sub-view of Emails
@@ -330,7 +331,7 @@ When Polylang is active without Polylang for WooCommerce, a dismissible admin no
 == Upgrade Notice ==
 
 = 1.2.0 =
-New admin with four screens. Your settings, emails, carts and log are kept as they are; recovery emails that were on stay on.
+New admin with four screens. Your settings, emails, carts and log are kept as they are; email texts you edited are never overwritten; recovery emails that were on stay on.
 
 = 1.1.7 =
 Translation files in GitHub and distribution ZIPs (Domain Path /languages). Invalid unsubscribe confirmation shows the form with an error.

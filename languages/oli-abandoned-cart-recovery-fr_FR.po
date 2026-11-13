@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Oli Abandoned Cart Recovery 1.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/repo\n"
-"POT-Creation-Date: 2026-11-13T01:37:51+00:00\n"
+"POT-Creation-Date: 2026-11-13T02:45:04+00:00\n"
 "PO-Revision-Date: 2026-10-23 00:32-0400\n"
 "Last-Translator: Olivier Bigras <oli@olivierbigras.com>\n"
 "Language-Team: Français\n"
@@ -1900,70 +1900,70 @@ msgstr ""
 "Commande en attente annulée automatiquement par Oli Abandoned Cart Recovery "
 "(trop vieille)."
 
-#: includes/class-oli-acr-templates.php:493
-#: includes/class-oli-acr-templates.php:518
-#: includes/class-oli-acr-templates.php:534
-#: includes/class-oli-acr-templates.php:551
+#: includes/class-oli-acr-templates.php:591
+#: includes/class-oli-acr-templates.php:616
+#: includes/class-oli-acr-templates.php:632
+#: includes/class-oli-acr-templates.php:649
 msgid "Hi {first_name},"
 msgstr "Bonjour {first_name},"
 
-#: includes/class-oli-acr-templates.php:493
+#: includes/class-oli-acr-templates.php:591
 msgid "Your items are still available. Use this single-use code at checkout:"
 msgstr ""
 "Vos articles sont encore disponibles. Utilisez ce code à usage unique au "
 "paiement :"
 
-#: includes/class-oli-acr-templates.php:509
+#: includes/class-oli-acr-templates.php:607
 msgid "Cart reminder #1"
 msgstr "Relance de panier nº 1"
 
-#: includes/class-oli-acr-templates.php:516
+#: includes/class-oli-acr-templates.php:614
 msgid "You left something in your cart"
 msgstr "Vous avez oublié quelque chose dans votre panier"
 
-#: includes/class-oli-acr-templates.php:517
+#: includes/class-oli-acr-templates.php:615
 msgid "Your cart is waiting for you"
 msgstr "Votre panier vous attend"
 
-#: includes/class-oli-acr-templates.php:518
+#: includes/class-oli-acr-templates.php:616
 msgid "Looks like you got interrupted. We saved the items in your cart:"
 msgstr ""
 "On dirait que vous avez été interrompu. Nous avons gardé les articles de "
 "votre panier :"
 
-#: includes/class-oli-acr-templates.php:518
+#: includes/class-oli-acr-templates.php:616
 msgid "Thank you,"
 msgstr "Merci,"
 
-#: includes/class-oli-acr-templates.php:525
+#: includes/class-oli-acr-templates.php:623
 msgid "Cart reminder #2 (coupon)"
 msgstr "Relance de panier nº 2 (coupon)"
 
-#: includes/class-oli-acr-templates.php:532
+#: includes/class-oli-acr-templates.php:630
 msgid "A little something to complete your order"
 msgstr "Un petit quelque chose pour terminer votre commande"
 
-#: includes/class-oli-acr-templates.php:533
+#: includes/class-oli-acr-templates.php:631
 msgid "Here is 10% off your cart"
 msgstr "Voici 10 % de rabais sur votre panier"
 
-#: includes/class-oli-acr-templates.php:534
+#: includes/class-oli-acr-templates.php:632
 msgid "Your items are still available."
 msgstr "Vos articles sont encore disponibles."
 
-#: includes/class-oli-acr-templates.php:542
+#: includes/class-oli-acr-templates.php:640
 msgid "Pending order reminder"
 msgstr "Relance de commande en attente"
 
-#: includes/class-oli-acr-templates.php:549
+#: includes/class-oli-acr-templates.php:647
 msgid "Your order #{order_number} is awaiting payment"
 msgstr "Votre commande nº {order_number} attend son paiement"
 
-#: includes/class-oli-acr-templates.php:550
+#: includes/class-oli-acr-templates.php:648
 msgid "Complete your payment"
 msgstr "Terminez votre paiement"
 
-#: includes/class-oli-acr-templates.php:551
+#: includes/class-oli-acr-templates.php:649
 msgid ""
 "Your order #{order_number} was not paid yet. You can complete the payment "
 "here:"
@@ -1971,13 +1971,13 @@ msgstr ""
 "Votre commande nº {order_number} n'est pas encore payée. Vous pouvez "
 "terminer le paiement ici :"
 
-#: includes/class-oli-acr-templates.php:552
+#: includes/class-oli-acr-templates.php:650
 msgid "Pay for my order"
 msgstr "Payer ma commande"
 
 #. translators: {coupon_amount} is a placeholder replaced by the discount
 #. (e.g. 10 % or $5.00). Keep it as is.
-#: includes/class-oli-acr-templates.php:569
+#: includes/class-oli-acr-templates.php:667
 msgid "Use this code to get {coupon_amount} off your order:"
 msgstr ""
 "Utilisez ce code pour obtenir {coupon_amount} de rabais sur votre commande :"

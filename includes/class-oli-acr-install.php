@@ -134,7 +134,9 @@ class OLI_ACR_Install {
 	 * Migration vers les textes par langue (1.1.0).
 	 *
 	 * - Modèles : les textes de la 1.0.x deviennent ceux de la langue de repli ; un modèle par défaut
-	 *   non modifié reçoit ses textes dans chaque langue active (sync_languages()).
+	 *   non modifié reçoit ses textes dans chaque langue active (sync_languages()). Seule une valeur
+	 *   strictement identique à un ancien texte par défaut peut être remplacée ; tout texte saisi par
+	 *   l'admin (objet, corps, clé plate héritée) est conservé à l'octet près.
 	 * - Consentement : un texte personnalisé devient celui de la langue de repli.
 	 * Idempotente : peut être relancée sans effet de bord.
 	 *
