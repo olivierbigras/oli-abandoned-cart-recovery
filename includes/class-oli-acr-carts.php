@@ -47,6 +47,18 @@ class OLI_ACR_Carts {
 	}
 
 	/**
+	 * Paniers abandonnés pendant l'arrêt des relances : aucun envoi prévu ni fait (P3-2).
+	 *
+	 * @return int
+	 */
+	public static function count_parked() {
+		global $wpdb;
+		$table = oli_acr_table( 'carts' );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Nom de table construit par oli_acr_table() ou $wpdb->prefix avec un suffixe fixe, jamais une saisie.
+		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE status = 'abandoned' AND next_send_at IS NULL AND emails_sent = 0" );
+	}
+
+	/**
 	 * Retourne un panier par jeton.
 	 *
 	 * @param string $token Jeton.

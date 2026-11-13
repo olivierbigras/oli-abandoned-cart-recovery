@@ -297,7 +297,9 @@ class OLI_ACR_Admin {
 		if ( ( '' !== self::$hook && self::$hook !== $hook ) || false === strpos( (string) $hook, self::SLUG ) ) {
 			return;
 		}
-		wp_enqueue_style( 'oli-acr-admin', OLI_ACR_URL . 'assets/css/admin.css', array(), OLI_ACR_VERSION );
+		// Feuille minifiée en production ; source lisible (admin.css, livrée aussi) avec SCRIPT_DEBUG.
+		$css = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? 'admin.css' : 'admin.min.css';
+		wp_enqueue_style( 'oli-acr-admin', OLI_ACR_URL . 'assets/css/' . $css, array(), OLI_ACR_VERSION );
 		wp_enqueue_script( 'oli-acr-admin', OLI_ACR_URL . 'assets/js/admin.js', array(), OLI_ACR_VERSION, true );
 		wp_localize_script(
 			'oli-acr-admin',
@@ -467,6 +469,27 @@ class OLI_ACR_Admin {
 	}
 
 	/**
+	 * Indice « N paniers enregistrés pendant l'arrêt ne seront pas relancés automatiquement » (P3-2).
+	 * Vide si N = 0 ou si les relances tournent déjà.
+	 *
+	 * @param string $tag Balise englobante (span dans le bandeau, p dans l'assistant).
+	 * @return string HTML échappé.
+	 */
+	public static function parked_hint( $tag = 'span' ) {
+		if ( oli_acr_reminders_on() ) {
+			return '';
+		}
+		$n = OLI_ACR_Carts::count_parked();
+		if ( $n < 1 ) {
+			return '';
+		}
+		$tag = 'p' === $tag ? 'p' : 'span';
+		/* translators: %d: number of carts. */
+		$text = sprintf( _n( '%d cart saved while emails were off will not be reminded automatically.', '%d carts saved while emails were off will not be reminded automatically.', $n, 'oli-abandoned-cart-recovery' ), $n );
+		return ( 'span' === $tag ? ' ' : '' ) . '<' . $tag . ' class="oli-acr-parked">' . esc_html( $text ) . ' <a href="' . esc_url( self::url( 'carts', array( 'view' => 'todo' ) ) ) . '">' . esc_html__( 'View carts', 'oli-abandoned-cart-recovery' ) . '</a></' . $tag . '>';
+	}
+
+	/**
 	 * Bandeau de statut (A-1) : Tableau de bord et Réglages seulement, absent de l'assistant (CA-ACR-17).
 	 * Remplace l'ancien avis rouge d'échec d'envoi (pas de doublon).
 	 *
@@ -486,7 +509,14 @@ class OLI_ACR_Admin {
 		} elseif ( 'on' === $status ) {
 			echo '<strong>' . esc_html__( 'Recovery emails are on.', 'oli-abandoned-cart-recovery' ) . '</strong> ' . esc_html__( 'Shoppers who opted in may receive the sequence.', 'oli-abandoned-cart-recovery' );
 		} else {
-			echo '<strong>' . esc_html__( 'Recovery emails are off.', 'oli-abandoned-cart-recovery' ) . '</strong> ' . esc_html__( 'No messages will be sent.', 'oli-abandoned-cart-recovery' );
+			echo '<strong>' . esc_html__( 'Recovery emails are off.', 'oli-abandoned-cart-recovery' ) . '</strong> ' . esc_html(
+				oli_acr_capture_on()
+					? __( 'Carts may be saved if the shopper ticks the box at checkout, but no email is sent.', 'oli-abandoned-cart-recovery' )
+					: __( 'No messages will be sent.', 'oli-abandoned-cart-recovery' )
+			);
+			if ( oli_acr_setup_done() ) {
+				echo self::parked_hint(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML échappé dans parked_hint().
+			}
 		}
 		echo '</p><div class="oli-acr-banner-actions">';
 		if ( 'mail' === $status ) {

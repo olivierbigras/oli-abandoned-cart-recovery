@@ -235,7 +235,9 @@ When Polylang is active without Polylang for WooCommerce, a dismissible admin no
 * Status banner on Dashboard and Settings (on, off, or email sending blocked) with a one-click switch; the donation request is shown only on Settings and can be dismissed
 * Checkout: new consent label, no "(optional)" suffix, and a help line (unsubscribe, retention period, privacy policy link) linked to the checkbox
 * Language tabs are shown only on a multilingual site, without locale codes
+* While recovery emails are off, the banner and the assistant say that consented carts may be saved but no email is sent; when you turn them on, they tell you how many carts saved meanwhile will not be reminded automatically, with a link to Carts
 * Accessibility: labels for every control, responsive screens down to 390 px without horizontal scrolling, colors follow the admin color scheme
+* Admin styles load as a minified file (the readable admin.css is included and used when SCRIPT_DEBUG is on)
 
 = 1.1.7 =
 * Include `languages/` (POT and French translations) in the GitHub / `git archive` ZIP and in the WordPress.org / `build-zip.sh` package

@@ -196,14 +196,20 @@ class OLI_ACR_Admin_Wizard {
 		$first  = $active ? reset( $active ) : null;
 		$days   = absint( oli_acr_get_setting( 'retention_days' ) );
 		echo '<div class="oli-acr-card-head"><h2>' . esc_html__( 'Ready to turn on', 'oli-abandoned-cart-recovery' ) . '</h2></div><div class="oli-acr-card-body">';
-		echo '<p>' . esc_html(
-			oli_acr_reminders_on()
-				? __( 'Recovery emails are on. Review the summary, then keep them on or turn them off.', 'oli-abandoned-cart-recovery' )
-				: ( $first
+		if ( oli_acr_reminders_on() ) {
+			$lead = __( 'Recovery emails are on. Review the summary, then keep them on or turn them off.', 'oli-abandoned-cart-recovery' );
+		} else {
+			$lead = oli_acr_capture_on()
+				? __( 'Until you turn them on, carts may be saved if the shopper ticks the box at checkout, but no email is sent.', 'oli-abandoned-cart-recovery' )
+				: __( 'Nothing has been sent so far.', 'oli-abandoned-cart-recovery' );
+			$lead .= ' ' . ( $first
 				/* translators: %s: delay of the first email, e.g. 1 hour. */
-				? sprintf( __( 'Nothing has been sent so far. Once on, email 1 can go out %s after a cart is abandoned, only if the shopper ticked the box.', 'oli-abandoned-cart-recovery' ), oli_acr_duration_label( $first['delay'] ) )
-				: __( 'Nothing has been sent so far. No email is active yet: turn one on in step 2 or under Emails.', 'oli-abandoned-cart-recovery' ) )
-		) . '</p><ul class="oli-acr-bullets">';
+				? sprintf( __( 'Once on, email 1 can go out %s after a cart is abandoned, only if the shopper ticked the box.', 'oli-abandoned-cart-recovery' ), oli_acr_duration_label( $first['delay'] ) )
+				: __( 'No email is active yet: turn one on in step 2 or under Emails.', 'oli-abandoned-cart-recovery' ) );
+		}
+		echo '<p>' . esc_html( $lead ) . '</p>';
+		echo OLI_ACR_Admin::parked_hint( 'p' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML échappé dans parked_hint().
+		echo '<ul class="oli-acr-bullets">';
 		echo '<li>' . esc_html( OLI_ACR_Admin_Settings::privacy_summary() ) . '</li>';
 		echo '<li>' . esc_html( OLI_ACR_Admin_Settings::sequence_summary() ) . '</li>';
 		/* translators: %s: sender name and email. */

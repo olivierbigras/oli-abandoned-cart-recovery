@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Oli Abandoned Cart Recovery 1.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/repo\n"
-"POT-Creation-Date: 2026-11-13T01:09:43+00:00\n"
+"POT-Creation-Date: 2026-11-13T01:37:51+00:00\n"
 "PO-Revision-Date: 2026-10-23 00:32-0400\n"
 "Last-Translator: Olivier Bigras <oli@olivierbigras.com>\n"
 "Language-Team: Français du Canada\n"
@@ -421,7 +421,7 @@ msgid "Sequence"
 msgstr "Séquence"
 
 #: includes/admin/class-oli-acr-admin-emails.php:161
-#: includes/admin/class-oli-acr-admin.php:496
+#: includes/admin/class-oli-acr-admin.php:526
 msgid "Log"
 msgstr "Journal"
 
@@ -783,7 +783,7 @@ msgid "Save without a checkbox (not recommended)"
 msgstr "Enregistrer sans case (déconseillé)"
 
 #: includes/admin/class-oli-acr-admin-settings.php:168
-#: includes/admin/class-oli-acr-admin.php:307
+#: includes/admin/class-oli-acr-admin.php:309
 msgid ""
 "This records personal information without a checkbox. You become responsible "
 "for compliance with applicable privacy law. Confirm only if you have another "
@@ -794,12 +794,12 @@ msgstr ""
 "si vous avez une autre base légale."
 
 #: includes/admin/class-oli-acr-admin-settings.php:170
-#: includes/admin/class-oli-acr-admin.php:659
+#: includes/admin/class-oli-acr-admin.php:689
 msgid "Carts are recorded without a checkbox."
 msgstr "Les paniers sont enregistrés sans case."
 
 #: includes/admin/class-oli-acr-admin-settings.php:170
-#: includes/admin/class-oli-acr-admin.php:660
+#: includes/admin/class-oli-acr-admin.php:690
 msgid ""
 "Quebec Law 25 and the GDPR generally require explicit consent before saving "
 "this data for reminders. You are responsible for having another legal basis."
@@ -1063,7 +1063,7 @@ msgid "Save and continue"
 msgstr "Enregistrer et continuer"
 
 #: includes/admin/class-oli-acr-admin-wizard.php:96
-#: includes/admin/class-oli-acr-admin-wizard.php:222
+#: includes/admin/class-oli-acr-admin-wizard.php:228
 msgid "Back"
 msgstr "Retour"
 
@@ -1156,7 +1156,7 @@ msgstr "Envoyer un courriel test"
 msgid "Ready to turn on"
 msgstr "Prêt à activer"
 
-#: includes/admin/class-oli-acr-admin-wizard.php:201
+#: includes/admin/class-oli-acr-admin-wizard.php:200
 msgid ""
 "Recovery emails are on. Review the summary, then keep them on or turn them "
 "off."
@@ -1164,32 +1164,41 @@ msgstr ""
 "Les relances sont actives. Vérifiez le résumé, puis gardez-les actives ou "
 "mettez-les à l’arrêt."
 
-#. translators: %s: delay of the first email, e.g. 1 hour.
+#: includes/admin/class-oli-acr-admin-wizard.php:203
+msgid ""
+"Until you turn them on, carts may be saved if the shopper ticks the box at "
+"checkout, but no email is sent."
+msgstr ""
+"Jusqu’à l’activation, les paniers peuvent être enregistrés si le "
+"consentement est coché à la caisse, mais aucun courriel n’est envoyé."
+
 #: includes/admin/class-oli-acr-admin-wizard.php:204
+msgid "Nothing has been sent so far."
+msgstr "Rien n’a été envoyé jusqu’ici."
+
+#. translators: %s: delay of the first email, e.g. 1 hour.
+#: includes/admin/class-oli-acr-admin-wizard.php:207
 #, php-format
 msgid ""
-"Nothing has been sent so far. Once on, email 1 can go out %s after a cart is "
-"abandoned, only if the shopper ticked the box."
+"Once on, email 1 can go out %s after a cart is abandoned, only if the "
+"shopper ticked the box."
 msgstr ""
-"Rien n’a été envoyé jusqu’ici. Une fois activée, la relance 1 peut partir %s "
-"après l’abandon d’un panier, seulement si la personne a coché la case."
+"Une fois activée, la relance 1 peut partir %s après l’abandon d’un panier, "
+"seulement si la personne a coché la case."
 
-#: includes/admin/class-oli-acr-admin-wizard.php:205
-msgid ""
-"Nothing has been sent so far. No email is active yet: turn one on in step 2 "
-"or under Emails."
+#: includes/admin/class-oli-acr-admin-wizard.php:208
+msgid "No email is active yet: turn one on in step 2 or under Emails."
 msgstr ""
-"Rien n’a été envoyé jusqu’ici. Aucun courriel n’est actif : activez-en un à "
-"l’étape 2 ou sous Courriels."
+"Aucun courriel n’est actif : activez-en un à l’étape 2 ou sous Courriels."
 
 #. translators: %s: sender name and email.
-#: includes/admin/class-oli-acr-admin-wizard.php:210
+#: includes/admin/class-oli-acr-admin-wizard.php:216
 #, php-format
 msgid "Sender: %s"
 msgstr "Expéditeur : %s"
 
 #. translators: %d: number of days.
-#: includes/admin/class-oli-acr-admin-wizard.php:212
+#: includes/admin/class-oli-acr-admin-wizard.php:218
 #, php-format
 msgid "Retention: %d day"
 msgid_plural "Retention: %d days"
@@ -1197,24 +1206,24 @@ msgstr[0] "Conservation : %d jour"
 msgstr[1] "Conservation : %d jours"
 
 #. translators: %d: number of days.
-#: includes/admin/class-oli-acr-admin-wizard.php:212
+#: includes/admin/class-oli-acr-admin-wizard.php:218
 msgid "Retention: no time limit"
 msgstr "Conservation : sans limite de temps"
 
-#: includes/admin/class-oli-acr-admin-wizard.php:216
+#: includes/admin/class-oli-acr-admin-wizard.php:222
 msgid "Keep recovery emails on"
 msgstr "Garder les relances actives"
 
-#: includes/admin/class-oli-acr-admin-wizard.php:217
+#: includes/admin/class-oli-acr-admin-wizard.php:223
 msgid "Turn off recovery emails"
 msgstr "Mettre les relances à l’arrêt"
 
-#: includes/admin/class-oli-acr-admin-wizard.php:219
-#: includes/admin/class-oli-acr-admin.php:507
+#: includes/admin/class-oli-acr-admin-wizard.php:225
+#: includes/admin/class-oli-acr-admin.php:537
 msgid "Turn on recovery emails"
 msgstr "Activer les relances"
 
-#: includes/admin/class-oli-acr-admin-wizard.php:220
+#: includes/admin/class-oli-acr-admin-wizard.php:226
 msgid "Not now — keep emails off"
 msgstr "Plus tard, laisser les relances à l’arrêt"
 
@@ -1244,88 +1253,88 @@ msgstr "Faire un don"
 msgid "Cart recovery"
 msgstr "Récupération de paniers"
 
-#: includes/admin/class-oli-acr-admin.php:306
+#: includes/admin/class-oli-acr-admin.php:308
 msgid "Delete this email?"
 msgstr "Supprimer ce courriel ?"
 
-#: includes/admin/class-oli-acr-admin.php:323
-#: includes/admin/class-oli-acr-admin.php:368
+#: includes/admin/class-oli-acr-admin.php:325
+#: includes/admin/class-oli-acr-admin.php:370
 msgid "Sorry, you are not allowed to access this page."
 msgstr "Désolé, vous n’avez pas l’autorisation d’accéder à cette page."
 
-#: includes/admin/class-oli-acr-admin.php:381
+#: includes/admin/class-oli-acr-admin.php:383
 msgid "Run the setup assistant again"
 msgstr "Relancer l’assistant de configuration"
 
-#: includes/admin/class-oli-acr-admin.php:412
+#: includes/admin/class-oli-acr-admin.php:414
 msgid "Cart recovery screens"
 msgstr "Écrans de la récupération de paniers"
 
-#: includes/admin/class-oli-acr-admin.php:433
+#: includes/admin/class-oli-acr-admin.php:435
 msgid "Settings saved."
 msgstr "Réglages enregistrés."
 
-#: includes/admin/class-oli-acr-admin.php:434
+#: includes/admin/class-oli-acr-admin.php:436
 msgid "Email saved."
 msgstr "Courriel enregistré."
 
-#: includes/admin/class-oli-acr-admin.php:435
+#: includes/admin/class-oli-acr-admin.php:437
 msgid "Email deleted."
 msgstr "Courriel supprimé."
 
-#: includes/admin/class-oli-acr-admin.php:436
+#: includes/admin/class-oli-acr-admin.php:438
 msgid "Email turned on."
 msgstr "Courriel activé."
 
-#: includes/admin/class-oli-acr-admin.php:437
+#: includes/admin/class-oli-acr-admin.php:439
 msgid "Email turned off."
 msgstr "Courriel désactivé."
 
-#: includes/admin/class-oli-acr-admin.php:438
+#: includes/admin/class-oli-acr-admin.php:440
 msgid "The sequence already has 5 cart emails."
 msgstr "La séquence compte déjà 5 courriels de panier."
 
-#: includes/admin/class-oli-acr-admin.php:439
+#: includes/admin/class-oli-acr-admin.php:441
 msgid "Test email sent. Check the inbox of the address you entered."
 msgstr ""
 "Courriel test envoyé. Vérifiez la boîte de réception de l’adresse saisie."
 
-#: includes/admin/class-oli-acr-admin.php:440
+#: includes/admin/class-oli-acr-admin.php:442
 msgid "The site cannot send email right now. Check outgoing mail in Settings."
 msgstr ""
 "Le site ne peut pas envoyer de courriel pour l’instant. Vérifiez l’envoi "
 "dans les Réglages."
 
-#: includes/admin/class-oli-acr-admin.php:441
+#: includes/admin/class-oli-acr-admin.php:443
 msgid "Enter a valid email address for the test."
 msgstr "Saisissez une adresse courriel valide pour le test."
 
-#: includes/admin/class-oli-acr-admin.php:442
+#: includes/admin/class-oli-acr-admin.php:444
 msgid "Reminder sent."
 msgstr "Relance envoyée."
 
-#: includes/admin/class-oli-acr-admin.php:443
+#: includes/admin/class-oli-acr-admin.php:445
 msgid ""
 "No reminder was sent (no active email left, or the customer unsubscribed)."
 msgstr ""
 "Aucune relance n’a été envoyée (plus de courriel actif, ou la personne s’est "
 "désinscrite)."
 
-#: includes/admin/class-oli-acr-admin.php:444
+#: includes/admin/class-oli-acr-admin.php:446
 msgid "Cart(s) deleted."
 msgstr "Panier(s) supprimé(s)."
 
-#: includes/admin/class-oli-acr-admin.php:445
-#: includes/admin/class-oli-acr-admin.php:487
+#: includes/admin/class-oli-acr-admin.php:447
+#: includes/admin/class-oli-acr-admin.php:510
 msgid "Recovery emails are on."
 msgstr "Relances actives."
 
-#: includes/admin/class-oli-acr-admin.php:446
-#: includes/admin/class-oli-acr-admin.php:489
+#: includes/admin/class-oli-acr-admin.php:448
+#: includes/admin/class-oli-acr-admin.php:512
 msgid "Recovery emails are off."
 msgstr "Les relances sont à l’arrêt."
 
-#: includes/admin/class-oli-acr-admin.php:447
+#: includes/admin/class-oli-acr-admin.php:449
 msgid ""
 "Setup complete: recovery emails are on. Shoppers who opted in at checkout "
 "may now receive the sequence."
@@ -1333,13 +1342,13 @@ msgstr ""
 "Configuration terminée : les relances sont actives. Les clients qui ont "
 "accepté à la caisse peuvent maintenant recevoir la séquence."
 
-#: includes/admin/class-oli-acr-admin.php:448
+#: includes/admin/class-oli-acr-admin.php:450
 msgid "Setup saved. Recovery emails stay off until you turn them on."
 msgstr ""
 "Configuration enregistrée. Les relances restent à l’arrêt tant que vous ne "
 "les activez pas."
 
-#: includes/admin/class-oli-acr-admin.php:449
+#: includes/admin/class-oli-acr-admin.php:451
 msgid ""
 "Nothing was changed: tick the confirmation to record carts without a "
 "checkbox."
@@ -1347,48 +1356,72 @@ msgstr ""
 "Rien n’a été modifié : cochez la confirmation pour enregistrer les paniers "
 "sans case."
 
-#: includes/admin/class-oli-acr-admin.php:485
+#. translators: %d: number of carts.
+#: includes/admin/class-oli-acr-admin.php:488
+#, php-format
+msgid "%d cart saved while emails were off will not be reminded automatically."
+msgid_plural ""
+"%d carts saved while emails were off will not be reminded automatically."
+msgstr[0] ""
+"%d panier enregistré pendant l’arrêt ne sera pas relancé automatiquement."
+msgstr[1] ""
+"%d paniers enregistrés pendant l’arrêt ne seront pas relancés "
+"automatiquement."
+
+#: includes/admin/class-oli-acr-admin.php:489
+msgid "View carts"
+msgstr "Voir les paniers"
+
+#: includes/admin/class-oli-acr-admin.php:508
 msgid "The site could not send an email. Check outgoing mail, then try again."
 msgstr ""
 "Le site n’a pas pu envoyer un courriel. Vérifiez l’envoi, puis réessayez."
 
-#: includes/admin/class-oli-acr-admin.php:487
+#: includes/admin/class-oli-acr-admin.php:510
 msgid "Shoppers who opted in may receive the sequence."
 msgstr "Les clients qui ont accepté peuvent recevoir la séquence."
 
-#: includes/admin/class-oli-acr-admin.php:489
+#: includes/admin/class-oli-acr-admin.php:514
+msgid ""
+"Carts may be saved if the shopper ticks the box at checkout, but no email is "
+"sent."
+msgstr ""
+"Les paniers peuvent être enregistrés si le consentement est coché à la "
+"caisse, mais aucun courriel n’est envoyé."
+
+#: includes/admin/class-oli-acr-admin.php:515
 msgid "No messages will be sent."
 msgstr "Aucun courriel n’est envoyé."
 
-#: includes/admin/class-oli-acr-admin.php:494
+#: includes/admin/class-oli-acr-admin.php:524
 msgid "Check outgoing mail"
 msgstr "Vérifier l’envoi"
 
-#: includes/admin/class-oli-acr-admin.php:497
+#: includes/admin/class-oli-acr-admin.php:527
 msgid "Hide until the next failure"
 msgstr "Masquer jusqu’au prochain échec"
 
-#: includes/admin/class-oli-acr-admin.php:500
+#: includes/admin/class-oli-acr-admin.php:530
 msgid "Open the setup assistant"
 msgstr "Ouvrir l’assistant de configuration"
 
-#: includes/admin/class-oli-acr-admin.php:507
+#: includes/admin/class-oli-acr-admin.php:537
 msgid "Turn off"
 msgstr "Mettre à l’arrêt"
 
-#: includes/admin/class-oli-acr-admin.php:652
+#: includes/admin/class-oli-acr-admin.php:682
 msgid "New interface: your settings and recovery emails have been kept."
 msgstr "Nouvelle interface : vos réglages et relances sont conservés."
 
-#: includes/admin/class-oli-acr-admin.php:653
+#: includes/admin/class-oli-acr-admin.php:683
 msgid "View settings"
 msgstr "Voir les réglages"
 
-#: includes/admin/class-oli-acr-admin.php:661
+#: includes/admin/class-oli-acr-admin.php:691
 msgid "Turn consent back on"
 msgstr "Réactiver le consentement"
 
-#: includes/admin/class-oli-acr-admin.php:667
+#: includes/admin/class-oli-acr-admin.php:697
 msgid ""
 "Oli Abandoned Cart Recovery: carts on translated checkout pages are not "
 "captured."
@@ -1396,7 +1429,7 @@ msgstr ""
 "Oli Abandoned Cart Recovery : les paniers des pages de paiement traduites ne "
 "sont pas captés."
 
-#: includes/admin/class-oli-acr-admin.php:668
+#: includes/admin/class-oli-acr-admin.php:698
 msgid ""
 "Polylang is active without \"Polylang for WooCommerce\", so WooCommerce does "
 "not recognize the translated checkout pages: the capture script is not "
@@ -1411,21 +1444,21 @@ msgstr ""
 "traduites à WooCommerce avec le filtre woocommerce_get_checkout_page_id "
 "(voir la FAQ de l'extension)."
 
-#: includes/admin/class-oli-acr-admin.php:670
+#: includes/admin/class-oli-acr-admin.php:700
 msgid "Polylang for WooCommerce"
 msgstr "Polylang for WooCommerce"
 
-#: includes/admin/class-oli-acr-admin.php:672
-#: includes/admin/class-oli-acr-admin.php:684
+#: includes/admin/class-oli-acr-admin.php:702
+#: includes/admin/class-oli-acr-admin.php:714
 msgid "Dismiss"
 msgstr "Fermer"
 
-#: includes/admin/class-oli-acr-admin.php:679
+#: includes/admin/class-oli-acr-admin.php:709
 msgid "Oli Abandoned Cart Recovery 1.1.0: consent is now required."
 msgstr ""
 "Oli Abandoned Cart Recovery 1.1.0 : le consentement est maintenant exigé."
 
-#: includes/admin/class-oli-acr-admin.php:680
+#: includes/admin/class-oli-acr-admin.php:710
 msgid ""
 "Your store saved guest carts without consent (\"Always\" mode). To comply "
 "with Quebec Law 25 and the GDPR, the update turned consent on: guests and "
@@ -1440,16 +1473,16 @@ msgstr ""
 "Vous pouvez le désactiver de nouveau dans les réglages, sous votre "
 "responsabilité."
 
-#: includes/admin/class-oli-acr-admin.php:682
+#: includes/admin/class-oli-acr-admin.php:712
 msgid "Review the settings"
 msgstr "Vérifier les réglages"
 
-#: includes/admin/class-oli-acr-admin.php:698
+#: includes/admin/class-oli-acr-admin.php:728
 msgid "Unknown notice."
 msgstr "Avis inconnu."
 
 #. translators: %s: donate URL
-#: includes/admin/class-oli-acr-admin.php:724
+#: includes/admin/class-oli-acr-admin.php:754
 #, php-format
 msgid ""
 "Enjoying this plugin? <a href=\"%s\" target=\"_blank\" rel=\"noopener "
@@ -1458,18 +1491,18 @@ msgstr ""
 "Vous aimez cette extension ? <a href=\"%s\" target=\"_blank\" rel=\"noopener "
 "noreferrer\">Offrez-moi un café</a> — votre soutien la garde gratuite."
 
-#: includes/admin/class-oli-acr-admin.php:756
+#: includes/admin/class-oli-acr-admin.php:786
 msgid "Unit"
 msgstr "Unité"
 
 #. translators: %s: human-readable time difference, e.g. 2 hours.
-#: includes/admin/class-oli-acr-admin.php:792
+#: includes/admin/class-oli-acr-admin.php:822
 #, php-format
 msgid "%s ago"
 msgstr "il y a %s"
 
 #. translators: %s: human-readable time difference, e.g. 2 hours.
-#: includes/admin/class-oli-acr-admin.php:795
+#: includes/admin/class-oli-acr-admin.php:825
 #, php-format
 msgid "in %s"
 msgstr "dans %s"

@@ -12,7 +12,9 @@ J'ai refait l'interface d'administration pour qu'elle tienne en quatre écrans e
 * J'ai ajouté un bandeau de statut (actif, à l'arrêt, envoi bloqué) sur le Tableau de bord et les Réglages, et je n'affiche plus la demande de don qu'une fois, sur les Réglages.
 * À la caisse, j'ai changé le libellé de la case, retiré la mention « (facultatif) » et ajouté une ligne d'aide (désinscription, durée de conservation, lien vers la politique de confidentialité).
 * J'affiche les onglets de langue seulement sur un site multilingue, sans code de locale.
+* Pendant l'arrêt, le bandeau et l'assistant disent que les paniers consentis peuvent être enregistrés mais qu'aucun courriel n'est envoyé ; au moment d'activer, j'indique combien de paniers enregistrés pendant l'arrêt ne seront pas relancés automatiquement, avec un lien vers Paniers.
 * J'ai travaillé l'accessibilité (noms accessibles, écrans sans défilement horizontal jusqu'à 390 px, couleurs qui suivent le schéma de l'admin).
+* Je charge une feuille de style d'admin minifiée (la source lisible admin.css est livrée et sert quand SCRIPT_DEBUG est actif) ; tools/build-css.py la régénère.
 
 ## 2026-10-23
 
