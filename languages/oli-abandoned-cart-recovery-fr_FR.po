@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Oli Abandoned Cart Recovery 1.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/repo\n"
-"POT-Creation-Date: 2026-11-13T01:04:06+00:00\n"
+"POT-Creation-Date: 2026-11-13T01:09:43+00:00\n"
 "PO-Revision-Date: 2026-10-23 00:32-0400\n"
 "Last-Translator: Olivier Bigras <oli@olivierbigras.com>\n"
 "Language-Team: Français\n"
@@ -173,13 +173,13 @@ msgstr[0] "%d tentative échouée."
 msgstr[1] "%d tentatives échouées."
 
 #: includes/admin/class-oli-acr-admin-carts.php:253
-#: includes/admin/class-oli-acr-carts-table.php:157
+#: includes/admin/class-oli-acr-carts-table.php:161
 msgid "Send the next reminder"
 msgstr "Envoyer la prochaine relance"
 
 #: includes/admin/class-oli-acr-admin-carts.php:255
 #: includes/admin/class-oli-acr-carts-table.php:80
-#: includes/admin/class-oli-acr-carts-table.php:159
+#: includes/admin/class-oli-acr-carts-table.php:163
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -1482,7 +1482,13 @@ msgstr "Relances"
 msgid "Date"
 msgstr "Date"
 
-#: includes/admin/class-oli-acr-carts-table.php:193
+#. translators: %s: customer email.
+#: includes/admin/class-oli-acr-carts-table.php:138
+#, php-format
+msgid "Select the cart of %s"
+msgstr "Sélectionner le panier de %s"
+
+#: includes/admin/class-oli-acr-carts-table.php:197
 msgid "No carts captured yet."
 msgstr "Aucun panier capturé pour l'instant."
 

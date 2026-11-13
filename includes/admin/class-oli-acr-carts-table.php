@@ -132,7 +132,11 @@ class OLI_ACR_Carts_Table extends WP_List_Table {
 	 * @return string
 	 */
 	protected function column_cb( $item ) {
-		return '<input type="checkbox" name="cart_ids[]" value="' . esc_attr( $item->id ) . '" />';
+		$id = 'oli-acr-cb-' . (int) $item->id;
+		return '<label class="screen-reader-text" for="' . esc_attr( $id ) . '">' . esc_html(
+			/* translators: %s: customer email. */
+			sprintf( __( 'Select the cart of %s', 'oli-abandoned-cart-recovery' ), $item->email )
+		) . '</label><input type="checkbox" id="' . esc_attr( $id ) . '" name="cart_ids[]" value="' . esc_attr( $item->id ) . '" />';
 	}
 
 	/**
